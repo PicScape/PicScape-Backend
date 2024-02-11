@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const sharp = require('sharp'); 
 const utils = require('../utils');
 
 const router = express.Router();
@@ -20,12 +21,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post('/api/upload', upload.single('file'), (req, res) => {
+router.post('/api/upload', upload.single('file'), async (req, res) => { 
   const { title, description, tags } = req.body;
   const id = req.generatedId;
 
+  
+  const inputFile = `${imagesFolder}/${id}${path.extname(req.file.originalname)}`;
+  const outputFile = `${imagesFolder}/${id}.png`;
+  await sharp(inputFile).toFormat('png').toFile(outputFile);
+
   const database = utils.loadDatabase();
-  const filename = `${id}${path.extname(req.file.originalname)}`;
+  const filename = `${id}.png`; 
   const date = utils.getCurrentFormattedDate();
 
   database.images.push({ id, title, tags, description, filename, date });
