@@ -18,7 +18,6 @@ const generateUniqueID = async () => {
     const database = utils.loadDatabase();
     const idExists = database.images.some(image => image.id === id);
     if (!idExists) {
-        console.log("id " + id + "does not exist")
         return id;
       
     }
