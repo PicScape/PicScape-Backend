@@ -3,13 +3,15 @@ const multer = require('multer');
 const path = require('path');
 const sharp = require('sharp'); 
 const utils = require('../utils');
+const fs = require('fs').promises; 
 
 const router = express.Router();
 const imagesFolder = "uploads";
+const tempFolder = "temp";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, imagesFolder + '/');
+    cb(null, path.join(imagesFolder, tempFolder)); 
   },
   filename: (req, file, cb) => {
     const id = Math.floor(10000 + Math.random() * 90000);
@@ -25,10 +27,14 @@ router.post('/api/upload', upload.single('file'), async (req, res) => {
   const { title, description, tags } = req.body;
   const id = req.generatedId;
 
-  
-  const inputFile = `${imagesFolder}/${id}${path.extname(req.file.originalname)}`;
-  const outputFile = `${imagesFolder}/${id}.png`;
-  await sharp(inputFile).toFormat('png').toFile(outputFile);
+  const tempFilePath = path.join(imagesFolder, tempFolder, `${id}${path.extname(req.file.originalname)}`);
+  const finalFilePath = path.join(imagesFolder, `${id}.png`);
+
+  await fs.rename(req.file.path, tempFilePath);
+
+  await sharp(tempFilePath).toFormat('png').toFile(finalFilePath);
+
+  await fs.unlink(tempFilePath);
 
   const database = utils.loadDatabase();
   const filename = `${id}.png`; 
