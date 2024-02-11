@@ -9,12 +9,28 @@ const router = express.Router();
 const imagesFolder = "uploads";
 const tempFolder = "temp";
 
+
+
+const generateUniqueID = async () => {
+  let id;
+  do {
+    id = Math.floor(10000 + Math.random() * 90000);
+    const database = utils.loadDatabase();
+    const idExists = database.images.some(image => image.id === id);
+    if (!idExists) {
+        console.log("id " + id + "does not exist")
+        return id;
+      
+    }
+  } while (true);
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(imagesFolder, tempFolder)); 
   },
-  filename: (req, file, cb) => {
-    const id = Math.floor(10000 + Math.random() * 90000);
+  filename: async (req, file, cb) => {
+    const id = await generateUniqueID();
     const filename = `${id}${path.extname(file.originalname)}`;
     cb(null, filename);
     req.generatedId = id;
