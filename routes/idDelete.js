@@ -22,9 +22,7 @@ router.get('/api/images/delete/:id', (req, res) => {
   fs.unlink(imagePath, (err) => {
     if (err) {
       console.error('Error deleting image file:', err);
-    } else {
-      console.log('Image file deleted successfully:', filename);
-    }
+    } 
   });
 
   const deletedImage = database.images.splice(imageIndex, 1)[0];
