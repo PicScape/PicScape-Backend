@@ -1,11 +1,20 @@
 const fs = require('fs');
+const path = require('path');
 
-const imagesFolder = "uploads";
+const uploadsFolder = "uploads";
+const tempFolder = path.join(uploadsFolder, "temp");
 
 function createImagesFolder() {
-  if (!fs.existsSync(imagesFolder)) {
-    fs.mkdirSync(imagesFolder);
-    console.log(`Folder "${imagesFolder}" was missing, successfully created one`);
+  // Create the uploads folder if it doesn't exist
+  if (!fs.existsSync(uploadsFolder)) {
+    fs.mkdirSync(uploadsFolder);
+    console.log(`Folder "${uploadsFolder}" was missing, successfully created one`);
+  }
+
+  // Create the temp folder inside uploads if it doesn't exist
+  if (!fs.existsSync(tempFolder)) {
+    fs.mkdirSync(tempFolder);
+    console.log(`Folder "${tempFolder}" was missing, successfully created one inside "${uploadsFolder}"`);
   }
 }
 
