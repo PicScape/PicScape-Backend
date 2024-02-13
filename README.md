@@ -55,7 +55,7 @@ npm run dev
 npm start
 ```
 
-### For the complete functionality of this project, the [backend](https://github.com/AIO-Develope/PicScape-Backend/) is essential.
+### For the complete functionality of this project, the [frontend](https://github.com/AIO-Develope/PicScape-Frontend/) is essential.
 
 ## Project Status
 PicScape is a relatively new project and it may currently lack some functionality and features. However, I am continually improving the project in the future. Additionally, PicScape will be available as a fully functional service in the future, ready for you to use.
