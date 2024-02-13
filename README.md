@@ -15,6 +15,7 @@ This is the repository for the __backend__ of the open-source PicScape project. 
 - [License](#mit-license)
 - [Project Setup](#project-setup)
 - [Project Status](#project-status)
+- [API Routes](#api-routes)
 - [Reporting Issues](#reporting-issues)
 
 ## MIT License
