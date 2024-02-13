@@ -60,6 +60,13 @@ npm start
 ## Project Status
 PicScape is a relatively new project and it may currently lack some functionality and features. However, I am continually improving the project in the future. Additionally, PicScape will be available as a fully functional service in the future, ready for you to use.
 
+## API Routes
+idDelete.js
+```
+POST /api/images/delete/:id/
+This endpoint deletes the image specified by the :id parameter.
+```
+
 ## Reporting Issues
 
 If you encounter any problems while using PicScape or have suggestions for improvement, please don't hesitate to open an issue on the GitHub repository. Your feedback is crucial in helping me identify areas for enhancement and address any issues that arise.
