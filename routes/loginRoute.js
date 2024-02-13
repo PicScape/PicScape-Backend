@@ -2,6 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const { loadUsers } = require('../utils');
+const verifyToken = require('../utils/jwtAuthMiddleware');
+
 
 const router = express.Router();
 const secretKey = 'test_key';
@@ -20,6 +22,10 @@ router.post('/api/login', upload.none(), (req, res) => {
   const token = jwt.sign({ username: user.username }, secretKey, { expiresIn: '1h' });
 
   res.json({ token });
+});
+
+router.get('/api/verifyToken', verifyToken, (req, res) => {
+  res.status(200).json({ message: 'Token is still valid' });
 });
 
 module.exports = router;
