@@ -61,11 +61,37 @@ npm start
 PicScape is a relatively new project and it may currently lack some functionality and features. However, I am continually improving the project in the future. Additionally, PicScape will be available as a fully functional service in the future, ready for you to use.
 
 ## API Routes
-### idDelete.js
+#### idDelete.js
 ```
-POST /api/images/delete/:id/
+POST /api/api/delete/:id
 This endpoint deletes the image specified by the :id parameter.
 ```
+#### idFetch.js
+```
+GET /api/api/images/:id
+This endpoint responds with the image specified by the :id parameter.
+```
+#### randomRoute.js
+```
+GET /api/api/random
+This endpoint responds with random images from the database. It provides as many images as specified in the "count" query parameter.
+```
+#### searchRoute.js
+```
+GET /api/search/:tags
+This endpoint searches for images in the database with tags similar to those specified in the URL parameter ":tags".
+```
+#### uploadRoute.js
+```
+POST /api/upload
+This endpoint allows users to upload image files along with corresponding information such as title, description, and tags. The required keys in the request body are:
+
+ - title [text]
+ - description [text]
+ - file [file]
+ - tags [text] (Note: Multiple "tags" keys can be added in the body, where each "tags" key can only contain one tag as its value.)
+ - tags [text] (this is an example if you want to add another tag)
+``` 
 
 ## Reporting Issues
 
