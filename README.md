@@ -63,17 +63,17 @@ PicScape is a relatively new project and it may currently lack some functionalit
 ## API Routes
 #### idDelete.js
 ```
-POST /api/api/delete/:id
+POST /api/delete/:id
 This endpoint deletes the image specified by the :id parameter.
 ```
 #### idFetch.js
 ```
-GET /api/api/images/:id
+GET /api/images/:id
 This endpoint responds with the image specified by the :id parameter.
 ```
 #### randomRoute.js
 ```
-GET /api/api/random
+GET /api/random
 This endpoint responds with random images from the database. It provides as many images as specified in the "count" query parameter.
 ```
 #### searchRoute.js
