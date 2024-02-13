@@ -2,13 +2,24 @@ const express = require('express');
 const { loadDatabase, saveDatabase } = require('../utils');
 const path = require('path');
 const fs = require('fs');
+const jwtAuthMiddleware = require('../utils/jwtAuthMiddleware');
 
 const router = express.Router();
 
-router.get('/api/images/delete/:id', (req, res) => {
+router.get('/api/images/delete/:id', jwtAuthMiddleware, (req, res) => {
+
+
+  const authToken = req.headers.authorization;
+  console.log('Authorization token:', authToken);
+
+
+  const user = req.user;
+  console.log('User:', user);
+
+
   const { id } = req.params;
   const database = loadDatabase();
-  
+
   const imageIndex = database.images.findIndex(img => parseInt(img.id) === parseInt(id));
 
   if (imageIndex === -1) {
@@ -22,7 +33,7 @@ router.get('/api/images/delete/:id', (req, res) => {
   fs.unlink(imagePath, (err) => {
     if (err) {
       console.error('Error deleting image file:', err);
-    } 
+    }
   });
 
   const deletedImage = database.images.splice(imageIndex, 1)[0];

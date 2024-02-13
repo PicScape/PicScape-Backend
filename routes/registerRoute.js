@@ -15,9 +15,8 @@ router.post('/api/register', upload.none(), (req, res) => {
     password 
   };
 
-  let users = loadUsers();
-  console.log(users)
-  users.push(user);
+  let users = loadUsers(); 
+  users.push(user); 
 
   saveUsers(users);
 
