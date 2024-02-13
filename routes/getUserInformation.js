@@ -14,8 +14,9 @@ router.get('/api/authuser', verifyToken, (req, res) => {
     res.json({ username });
 });
 
-router.get('/api/uuiduser', upload.none(), (req, res) => {
-    const uuid = req.body.uuid;
+router.get('/api/uuiduser/:uuid', (req, res) => {
+    const { uuid } = req.params;
+    
     const users = loadUsers();
     const user = users.find(user => user.uuid === uuid); 
 
