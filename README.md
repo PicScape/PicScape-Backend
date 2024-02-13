@@ -55,7 +55,7 @@ npm run dev
 npm start
 ```
 
-### For the complete functionality of this project, the [backend](https://github.com/AIO-Develope/PicScape-Frontend) is essential.
+### For the complete functionality of this project, the [backend](https://github.com/AIO-Develope/PicScape-Backend/) is essential.
 
 ## Project Status
 PicScape is a relatively new project and it may currently lack some functionality and features. However, I am continually improving the project in the future. Additionally, PicScape will be available as a fully functional service in the future, ready for you to use.
@@ -66,7 +66,7 @@ If you encounter any problems while using PicScape or have suggestions for impro
 
 To report an issue:
 
-1. Go to the [Issues](https://github.com/YourGitHubUsername/PicScape-Backend/issues) section of the repository.
+1. Go to the [Issues](https://github.com/AIO-Develope/PicScape-Backend/issues) section of the repository.
 2. Provide a clear and detailed description of the problem you've encountered or the feature you'd like to suggest.
 3. If possible, include steps to reproduce the issue or examples to clarify your suggestion.
 5. Add any relevant files.
