@@ -95,7 +95,28 @@ This endpoint allows users to upload image files along with corresponding inform
  - tags [text] (this is an example if you want to add another tag)
 
 This action requires an Auth Key to be included in the header for authorization.
-``` 
+```
+### getUserInformation.js
+```
+GET /api/authuser
+This endpoint responds with the username associated with the authentication key sent in the header.
+
+GET /api/uuiduser/:uuid
+This endpoint responds with the username associated with the UUID sent in the parameters.
+```
+### loginRoute.js
+```
+POST /api/login
+The endpoint provides the JWT authentication key only if the username and password sent in the request body correctly correspond to a registered user.
+
+GET /api/verifyToken
+This endpoint verifies if the sent token in the header is still valid.
+```
+### registerRoute.js
+```
+POST /api/register
+This endpoint receives a request with a password and username in the body, then generates a UUID for the user and adds it to the users database
+```
 
 ## Reporting Issues
 
