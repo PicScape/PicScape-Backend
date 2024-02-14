@@ -66,6 +66,7 @@ PicScape is a relatively new project and it may currently lack some functionalit
 ```
 POST /api/delete/:id
 This endpoint deletes the image specified by the :id parameter.
+This action requires an Auth Key to be included in the header for authorization.
 ```
 #### idFetch.js
 ```
@@ -92,6 +93,8 @@ This endpoint allows users to upload image files along with corresponding inform
  - file [file]
  - tags [text] (Note: Multiple "tags" keys can be added in the body, where each "tags" key can only contain one tag as its value.)
  - tags [text] (this is an example if you want to add another tag)
+
+This action requires an Auth Key to be included in the header for authorization.
 ``` 
 
 ## Reporting Issues
