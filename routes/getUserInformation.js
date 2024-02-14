@@ -10,8 +10,14 @@ const router = express.Router();
 
 router.get('/api/authuser', verifyToken, (req, res) => {
     const username = req.user.username;
-
-    res.json({ username });
+    const users = loadUsers();
+    const user = users.find(user => user.username === username);
+    
+    if (user) {
+        res.json({ username, uuid: user.uuid });
+    } else {
+        res.status(404).json({ error: "User not found" });
+    }
 });
 
 router.get('/api/uuiduser/:uuid', (req, res) => {

@@ -8,7 +8,6 @@ const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   const users = loadUsers();
 
-  console.log(users);
 
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized: No token provided' });

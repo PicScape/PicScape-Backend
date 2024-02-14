@@ -21,7 +21,7 @@ router.post('/api/login', upload.none(), (req, res) => {
 
   const token = jwt.sign({ username: user.username }, secretKey, { expiresIn: '1h' });
 
-  res.json({ token });
+  res.json({ token, uuid: user.uuid });
 });
 
 router.get('/api/verifyToken', verifyToken, (req, res) => {
