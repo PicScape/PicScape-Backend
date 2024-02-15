@@ -9,12 +9,8 @@ const router = express.Router();
 router.get('/api/images/delete/:id', jwtAuthMiddleware, (req, res) => {
 
 
-  const authToken = req.headers.authorization;
-  console.log('Authorization token:', authToken);
 
 
-  const user = req.user;
-  console.log('User:', user);
 
 
   const { id } = req.params;
