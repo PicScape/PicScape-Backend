@@ -76,7 +76,7 @@ This action requires an Auth Key to be included in the header for authorization.
 ### getUserInformation.js
 ```
 GET /api/authuser
-This endpoint responds with the username associated with the authentication key sent in the header.
+This endpoint responds with the username and uuid associated with the authentication key sent in the header.
 
 GET /api/uuiduser/:uuid
 This endpoint responds with the username associated with the UUID sent in the parameters.
