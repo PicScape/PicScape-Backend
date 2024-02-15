@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="200" src="https://github.com/AIO-Develope/PicScape-Backend/assets/69240351/1871f723-4f44-4a54-b093-02705324e287">
+</p>
+
 <h1 align="center" id="picscape-backend">
     PicScape-Backend
     <br>
