@@ -37,6 +37,10 @@ npm run dev
 ```
 npm start
 ```
+### Load dummy preset
+```
+npm run load default
+```
 
 ### For the complete functionality of this project, the [frontend](https://github.com/AIO-Develope/PicScape-Frontend/) is essential.
 
