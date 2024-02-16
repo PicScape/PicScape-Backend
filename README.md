@@ -17,6 +17,7 @@ This is the repository for the __backend__ of the open-source PicScape project. 
 ## Overview
 - [Introduction](#picscape-backend)
 - [Project Setup](#project-setup)
+- [Scripts](#scripts)
 - [Project Status](#project-status)
 - [API Routes](#api-routes)
 - [Reporting Issues](#reporting-issues)
@@ -38,6 +39,23 @@ npm start
 ```
 
 ### For the complete functionality of this project, the [frontend](https://github.com/AIO-Develope/PicScape-Frontend/) is essential.
+
+
+## Scripts
+
+### save.js
+```
+npm run save [name]
+```
+With this command, you save the `users.json`, `database.json`, and the `/uploads` folder under the specified name.
+
+
+### load.js
+```
+npm run load [name]
+```
+With this command, you load previously saved data from the save command with the previously specified name.
+
 
 ## Project Status
 PicScape is a relatively new project and it may currently lack some functionality and features. However, I am continually improving the project in the future. Additionally, PicScape will be available as a fully functional service in the future, ready for you to use.
