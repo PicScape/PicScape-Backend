@@ -58,7 +58,7 @@ router.post('/api/upload', jwtAuthMiddleware, upload.single('file'), async (req,
 
   await sharp(tempFilePath).toFormat('png').toFile(finalFilePath);
 
-  await fs.unlink(tempFilePath);
+  
 
   const database = utils.loadDatabase();
   const filename = `${id}.png`;
