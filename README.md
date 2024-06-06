@@ -6,8 +6,8 @@
     PicScape-Backend
     <br>
     <div align="center"></div>
-    <img src="https://img.shields.io/badge/Express-v4.18.2-bgrightgreen" align="center"/>
-    <img src="https://img.shields.io/badge/docker-blue" align="center"/>
+    [<img src="https://img.shields.io/badge/Express-v4.18.2-bgrightgreen" align="center"/>](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)
+    <img src="https://img.shields.io/badge/mongo-blue" align="center"/>
     <img src="https://img.shields.io/badge/NodeJs-v20-red" align="center"/>
     <img src="https://img.shields.io/badge/Development-paused-green" align="center"/>
 </h1>
