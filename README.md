@@ -7,9 +7,9 @@
     <br>
     <div align="center"></div>
     <img src="https://img.shields.io/badge/Express-v4.18.2-bgrightgreen" align="center"/>
-    <img src="https://img.shields.io/badge/NodeJs-v20.11.0-green" align="center"/>
-    <img src="https://img.shields.io/badge/NPM-v10.4.0-red" align="center"/>
-    <img src="https://img.shields.io/badge/Development-paused-blue" align="center"/>
+    <img src="https://img.shields.io/badge/docker-blue" align="center"/>
+    <img src="https://img.shields.io/badge/NodeJs-v20-red" align="center"/>
+    <img src="https://img.shields.io/badge/Development-paused-green" align="center"/>
 </h1>
 
 This is the repository for the __backend__ of the open-source PicScape project. PicScape serves as an archive for profile pictures, banners, and wallpapers. On PicScape, users can discover and share stunning and aesthetic artwork, enhancing their online presence or desktop aesthetics.
