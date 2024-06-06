@@ -1,11 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 
 // Environmental Variables
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_DATABASE, PORT } = process.env;
+
+app.use(cors());
 
 // MongoDB Connection
 (async () => {
