@@ -21,8 +21,9 @@ This is the repository for the __backend__ of the open-source PicScape project. 
 - [API Routes](#api-routes)
 - [Reporting Issues](#reporting-issues)
 
+## Project Setup
 
-## Run in dev mode
+### Run in dev mode
 ```
 npm run docker:dev
 ```
