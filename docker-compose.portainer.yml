@@ -4,10 +4,7 @@ services:
     container_name: PicScape-API
     build:
       context: .
-      dockerfile: Dockerfile.dev
-    volumes:
-      - .:/app
-      - /app/node_modules
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
@@ -16,6 +13,8 @@ services:
       MONGO_DATABASE: {{ MONGO_DATABASE }}
       PORT: {{ PORT }}
       SECRET: {{ SECRET }}
+    pull_policy: build
+    
 
   mongo:
     command: mongod --quiet --logpath /dev/null 
@@ -30,7 +29,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: {{ MONGO_USERNAME }}
       MONGO_INITDB_DATABASE: {{ MONGO_DATABASE }}
       MONGO_INITDB_ROOT_PASSWORD: {{ MONGO_PASSWORD }}
-      
-    
+
 volumes:
   mongodb_data:
