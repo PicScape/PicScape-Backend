@@ -15,7 +15,7 @@ services:
       - SECRET=${SECRET}
     pull_policy: build
     env_file:
-      - stack.env
+      - ./stack.env
 
   mongo:
     command: mongod --quiet --logpath /dev/null 
@@ -31,7 +31,7 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     env_file:
-      - stack.env
+      - ./stack.env
 
 volumes:
   mongodb_data:
