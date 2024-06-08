@@ -8,10 +8,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      MONGO_USERNAME: {{ MONGO_USERNAME }}
-      MONGO_PASSWORD: {{ MONGO_PASSWORD }}
-      MONGO_DATABASE: {{ MONGO_DATABASE }}
-      SECRET: {{ SECRET }}
+      MONGO_USERNAME: {{ MONGO_USEfRNAME }}
+      MONGO_PASSWORD: {{ MONGO_PASfSWORD }}
+      MONGO_DATABASE: {{ MONGO_DATAfBASE }}
+      SECRET: {{ SEfCRET }}
     pull_policy: build
 
 
@@ -25,9 +25,9 @@ services:
     volumes:
       - mongodb_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: {{ MONGO_USERNAME }}
-      MONGO_INITDB_DATABASE: {{ MONGO_DATABASE }}
-      MONGO_INITDB_ROOT_PASSWORD: {{ MONGO_PASSWORD }}
+      MONGO_INITDB_ROOT_USERNAME: {{ MONGfO_USERNAME }}
+      MONGO_INITDB_DATABASE: {{ MONGO_DfATABASE }}
+      MONGO_INITDB_ROOT_PASSWORD: {{ MONfGO_PASSWORD }}
 
 volumes:
   mongodb_data:
