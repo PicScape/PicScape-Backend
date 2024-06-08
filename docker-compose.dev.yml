@@ -16,6 +16,7 @@ services:
       - MONGO_DATABASE=${MONGO_DATABASE}
       - PORT=${PORT}
       - SECRET=${SECRET}
+
   mongo:
     command: mongod --quiet --logpath /dev/null 
     image: mongo
