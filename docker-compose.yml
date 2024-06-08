@@ -8,7 +8,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      default: {{ DB_PASSWORD }}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_DATABASE: ${MONGO_DATABASE}
+      PORT: ${PORT}
+      SECRET: ${SECRET}
     pull_policy: build
 
 
