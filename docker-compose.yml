@@ -15,7 +15,7 @@ services:
       - SECRET=${SECRET}
     pull_policy: build
     env_file:
-      - stack.env
+      - ./.env
 
   mongo:
     command: mongod --quiet --logpath /dev/null 
