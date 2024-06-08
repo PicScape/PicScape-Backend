@@ -25,7 +25,7 @@ services:
     volumes:
       - mongodb_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: {{ MONGO_USERNAME }}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-default_username}
       MONGO_INITDB_DATABASE: {{ MONGO_DATABASE }}
       MONGO_INITDB_ROOT_PASSWORD: {{ MONGO_PASSWORD }}
 
