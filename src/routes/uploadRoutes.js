@@ -20,7 +20,7 @@ const convertToJPEG = async (buffer) => {
 // POST /upload/pfp - Route to upload a profile picture
 router.post('/pfp', auth, upload.single('image'), async (req, res) => {
   const { file } = req;
-  const { tags } = req.body;
+  const { tags, title } = req.body;
 
   // Check if file is present
   if (!file) {
@@ -43,7 +43,8 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
 
     // Create a new profile picture upload entry
     const pfp = new Pfp({
-      title: 'pfp',
+      title: title,
+      type: 'pfp',
       image: convertedBuffer,
       account: req.user.id,
       tags: tags
@@ -88,7 +89,8 @@ router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
 
     // Create a new wallpaper upload entry
     const wallpaper = new Wallpaper({
-      title: 'wallpaper',
+      title: title,
+      type: 'wallpaper',
       image: convertedBuffer,
       account: req.user.id,
       tags: tags
