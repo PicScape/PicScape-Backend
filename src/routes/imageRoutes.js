@@ -25,6 +25,7 @@ router.get('/data/:imgId', async (req, res) => {
     const response = {
       id: upload._id,
       title: upload.title,
+      type: upload.type,
       imgId: imgId,
       author: upload.account,
       createdAt: upload.createdAt,

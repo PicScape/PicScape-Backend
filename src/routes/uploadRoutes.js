@@ -44,7 +44,7 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
     // Create a new profile picture upload entry
     const pfp = new Pfp({
       title: title,
-      type: 'pfp',
+      type: "pfp",
       image: convertedBuffer,
       account: req.user.id,
       tags: tags
@@ -66,7 +66,7 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
 // POST /upload/wallpaper - Route to upload a wallpaper
 router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
   const { file } = req;
-  const { tags } = req.body;
+  const { tags, title } = req.body;
 
   // Check if file is present
   if (!file) {
@@ -90,7 +90,7 @@ router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
     // Create a new wallpaper upload entry
     const wallpaper = new Wallpaper({
       title: title,
-      type: 'wallpaper',
+      type: "wallpaper",
       image: convertedBuffer,
       account: req.user.id,
       tags: tags
