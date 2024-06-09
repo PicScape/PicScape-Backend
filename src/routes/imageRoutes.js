@@ -3,7 +3,6 @@ const router = express.Router();
 const Pfp = require('../models/Pfp');
 const Wallpaper = require('../models/Wallpaper');
 
-// Function to find upload by ID
 const findUploadById = async (imgId) => {
   let upload = await Pfp.findOne({ imgId: imgId });
   if (!upload) {
