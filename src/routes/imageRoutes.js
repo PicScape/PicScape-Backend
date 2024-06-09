@@ -28,7 +28,7 @@ router.get('/data/:imgId', async (req, res) => {
       imgId: imgId,
       author: upload.account,
       createdAt: upload.createdAt,
-      image: upload.image
+      //image: upload.image
     };
 
     res.json({ upload: response });

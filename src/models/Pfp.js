@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
+const sizeOf = require('image-size'); 
 
 const pfpSchema = new mongoose.Schema({
   _id: {
@@ -34,6 +35,19 @@ pfpSchema.pre('save', async function(next) {
       }
     } while (true);
   }
+  
+  // Ensure 1:1 aspect ratio before saving
+  if (doc.image) {
+    const imageBuffer = Buffer.from(doc.image, 'base64');
+    const dimensions = sizeOf(imageBuffer);
+    const width = dimensions.width;
+    const height = dimensions.height;
+    if (width !== height) {
+      const error = new Error('Image dimensions must be 1:1');
+      return next(error);
+    }
+  }
+
   next();
 });
 

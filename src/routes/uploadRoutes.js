@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() }); // Store uploaded file in memory
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: '5MB' } // 5 MB limit
+});
 const sharp = require('sharp');
 
 // Models
@@ -22,6 +25,11 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
   // Check if file is present
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // Check if file size exceeds limit
+  if (file.size > 5 * 1024 * 1024) { // 5 MB limit
+    return res.status(400).json({ error: 'File size exceeds maximum limit (5MB)' });
   }
 
   // Check if tags are present and valid
@@ -45,6 +53,10 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
 
     res.json({ message: 'Profile picture upload successful' });
   } catch (error) {
+    // Check if error is due to dimension mismatch
+    if (error.message === 'Image dimensions must be 1:1') {
+      return res.status(400).json({ error: error.message });
+    }
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -58,6 +70,11 @@ router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
   // Check if file is present
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // Check if file size exceeds limit
+  if (file.size > 5 * 1024 * 1024) { // 5 MB limit
+    return res.status(400).json({ error: 'File size exceeds maximum limit (5MB)' });
   }
 
   // Check if tags are present and valid
@@ -81,6 +98,10 @@ router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
 
     res.json({ message: 'Wallpaper upload successful' });
   } catch (error) {
+    // Check if error is due to dimension mismatch
+    if (error.message === 'Image dimensions must be 1:1') {
+      return res.status(400).json({ error: error.message });
+    }
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
