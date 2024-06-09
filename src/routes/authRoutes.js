@@ -2,8 +2,7 @@ const express = require('express');
 const Account = require('../models/Account');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-
-const JWT_SECRET = process.env.JWT_SECRET;
+const { JWT_SECRET } = process.env;
 
 // Route for user registration
 router.post('/register', async (req, res) => {
