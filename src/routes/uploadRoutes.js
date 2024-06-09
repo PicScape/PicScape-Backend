@@ -17,10 +17,16 @@ const convertToJPEG = async (buffer) => {
 // POST /upload/pfp - Route to upload a profile picture
 router.post('/pfp', auth, upload.single('image'), async (req, res) => {
   const { file } = req;
+  const { tags } = req.body;
 
   // Check if file is present
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // Check if tags are present and valid
+  if (!Array.isArray(tags) || tags.length < 2) {
+    return res.status(400).json({ error: 'A minimum of 2 tags is required' });
   }
 
   try {
@@ -31,7 +37,8 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
     const pfp = new Pfp({
       title: 'pfp',
       image: convertedBuffer,
-      account: req.user.id
+      account: req.user.id,
+      tags: tags
     });
 
     await pfp.save();
@@ -46,10 +53,16 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
 // POST /upload/wallpaper - Route to upload a wallpaper
 router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
   const { file } = req;
+  const { tags } = req.body;
 
   // Check if file is present
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // Check if tags are present and valid
+  if (!Array.isArray(tags) || tags.length < 2) {
+    return res.status(400).json({ error: 'A minimum of 2 tags is required' });
   }
 
   try {
@@ -60,7 +73,8 @@ router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
     const wallpaper = new Wallpaper({
       title: 'wallpaper',
       image: convertedBuffer,
-      account: req.user.id
+      account: req.user.id,
+      tags: tags
     });
 
     await wallpaper.save();
