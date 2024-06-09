@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() }); // Store uploaded file in memory
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: '5MB' } // 5 MB limit
+});
 const sharp = require('sharp');
 
 // Models
@@ -17,10 +20,21 @@ const convertToJPEG = async (buffer) => {
 // POST /upload/pfp - Route to upload a profile picture
 router.post('/pfp', auth, upload.single('image'), async (req, res) => {
   const { file } = req;
+  const { tags } = req.body;
 
   // Check if file is present
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // Check if file size exceeds limit
+  if (file.size > 5 * 1024 * 1024) { // 5 MB limit
+    return res.status(400).json({ error: 'File size exceeds maximum limit (5MB)' });
+  }
+
+  // Check if tags are present and valid
+  if (!Array.isArray(tags) || tags.length < 2) {
+    return res.status(400).json({ error: 'A minimum of 2 tags is required' });
   }
 
   try {
@@ -31,13 +45,18 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
     const pfp = new Pfp({
       title: 'pfp',
       image: convertedBuffer,
-      account: req.user.id
+      account: req.user.id,
+      tags: tags
     });
 
     await pfp.save();
 
     res.json({ message: 'Profile picture upload successful' });
   } catch (error) {
+    // Check if error is due to dimension mismatch
+    if (error.message === 'Image dimensions must be 1:1') {
+      return res.status(400).json({ error: error.message });
+    }
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -46,10 +65,21 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
 // POST /upload/wallpaper - Route to upload a wallpaper
 router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
   const { file } = req;
+  const { tags } = req.body;
 
   // Check if file is present
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  // Check if file size exceeds limit
+  if (file.size > 5 * 1024 * 1024) { // 5 MB limit
+    return res.status(400).json({ error: 'File size exceeds maximum limit (5MB)' });
+  }
+
+  // Check if tags are present and valid
+  if (!Array.isArray(tags) || tags.length < 2) {
+    return res.status(400).json({ error: 'A minimum of 2 tags is required' });
   }
 
   try {
@@ -60,13 +90,18 @@ router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
     const wallpaper = new Wallpaper({
       title: 'wallpaper',
       image: convertedBuffer,
-      account: req.user.id
+      account: req.user.id,
+      tags: tags
     });
 
     await wallpaper.save();
 
     res.json({ message: 'Wallpaper upload successful' });
   } catch (error) {
+    // Check if error is due to dimension mismatch
+    if (error.message === 'Image dimensions must be 1:1') {
+      return res.status(400).json({ error: error.message });
+    }
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
