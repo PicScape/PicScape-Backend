@@ -13,6 +13,8 @@ services:
       MONGO_DATABASE: ${MONGO_DATABASE}
       PORT: ${PORT}
       SECRET: ${SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+
     pull_policy: build
     
 
