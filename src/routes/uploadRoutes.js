@@ -3,10 +3,16 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() }); // Store uploaded file in memory
+const sharp = require('sharp');
 
 // Models
 const Pfp = require('../models/Pfp');
 const Wallpaper = require('../models/Wallpaper');
+
+// Function to convert image buffer to JPEG format using Sharp
+const convertToJPEG = async (buffer) => {
+  return sharp(buffer).jpeg().toBuffer();
+};
 
 // POST /upload/pfp - Route to upload a profile picture
 router.post('/pfp', auth, upload.single('image'), async (req, res) => {
@@ -18,10 +24,13 @@ router.post('/pfp', auth, upload.single('image'), async (req, res) => {
   }
 
   try {
+    // Convert image to JPEG format
+    const convertedBuffer = await convertToJPEG(file.buffer);
+
     // Create a new profile picture upload entry
     const pfp = new Pfp({
       title: 'pfp',
-      image: file.buffer,
+      image: convertedBuffer,
       account: req.user.id
     });
 
@@ -44,10 +53,13 @@ router.post('/wallpaper', auth, upload.single('image'), async (req, res) => {
   }
 
   try {
+    // Convert image to JPEG format
+    const convertedBuffer = await convertToJPEG(file.buffer);
+
     // Create a new wallpaper upload entry
     const wallpaper = new Wallpaper({
       title: 'wallpaper',
-      image: file.buffer,
+      image: convertedBuffer,
       account: req.user.id
     });
 
