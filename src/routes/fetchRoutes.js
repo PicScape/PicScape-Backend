@@ -44,13 +44,22 @@ router.get('/account', auth, (req, res) => {
   });
 });
 
-// GET /user/:username - Route to fetch user information by username from MongoDB
-router.get('/account/:username', async (req, res) => {
-  const { username } = req.params;
+// GET /account - Route to fetch user information by username or userId from MongoDB
+router.get('/user', async (req, res) => {
+  const { username, userId } = req.query;
 
   try {
-    // Search for account in the Account model by username
-    const account = await Account.findOne({ username });
+    let query;
+    if (username) {
+      query = { username };
+    } else if (userId) {
+      query = { _id: userId };
+    } else {
+      return res.status(400).json({ error: 'Please provide either username or userId' });
+    }
+
+    // Search for account in the Account model based on the provided query
+    const account = await Account.findOne(query);
 
     if (!account) {
       return res.status(404).json({ error: 'Account not found' });
@@ -69,5 +78,6 @@ router.get('/account/:username', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 module.exports = router;

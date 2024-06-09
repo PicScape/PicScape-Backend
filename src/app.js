@@ -18,6 +18,7 @@ connectToMongoDB();
 //ROUTES
 app.use('/auth', routes.authRoutes);
 app.use('/fetch', routes.fetchRoutes);
+app.use('/upload', routes.uploadRoutes);
 
 
 app.listen(PORT, () => {
