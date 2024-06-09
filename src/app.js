@@ -1,43 +1,25 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { connectToMongoDB } = require('./mongo');
+const routes = require('./routes');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Environmental Variables
-const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_DATABASE, PORT } = process.env;
 
 app.use(cors());
-
-// MongoDB Connection
-(async () => {
-  try {
-    await mongoose.connect(`mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/${MONGO_DATABASE}`, {
-      retryWrites: true,
-      writeConcern: { w: 'majority' },
-      authSource: 'admin'
-    });
-    console.log('Connected to MongoDB');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-  }
-})();
-
 app.use(bodyParser.json());
 
-
-// Routes
-
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-
-app.use('/auth', authRoutes);
-app.use('/profile', authRoutes);
+//MONGO
+connectToMongoDB();
 
 
-// Start Server
-app.listen(PORT || 3000, () => {
-  console.log(`Server running on port ${PORT || 3000}`);
+//ROUTES
+app.use('/auth', routes.authRoutes);
+app.use('/fetch', routes.fetchRoutes);
+
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
