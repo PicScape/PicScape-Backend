@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const sizeOf = require('image-size'); 
 
+function generateRandomImgId() {
+  return Math.floor(10000 + Math.random() * 90000); // Generate a 5-digit number
+}
+
 const pfpSchema = new mongoose.Schema({
   _id: {
     type: String,
@@ -71,6 +75,4 @@ const Pfp = mongoose.model('Pfp', pfpSchema, 'Pfps');
 
 module.exports = Pfp;
 
-function generateRandomImgId() {
-  return Math.floor(10000 + Math.random() * 90000); // Generate a 5-digit number
-}
+

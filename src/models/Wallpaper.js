@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
+function generateRandomImgId() {
+  return Math.floor(10000 + Math.random() * 90000); // Generate a 5-digit number
+}
 
 const wallpaperSchema = new mongoose.Schema({
   _id: {
@@ -56,6 +59,4 @@ const Wallpaper = mongoose.model('Wallpaper', wallpaperSchema, 'Wallpapers');
 
 module.exports = Wallpaper;
 
-function generateRandomImgId() {
-  return Math.floor(10000 + Math.random() * 90000); // Generate a 5-digit number
-}
+
