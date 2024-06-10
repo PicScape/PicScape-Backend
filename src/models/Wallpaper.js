@@ -5,21 +5,34 @@ const { v4: uuidv4 } = require('uuid');
 const wallpaperSchema = new mongoose.Schema({
   _id: {
     type: String,
+    required: true,
     default: uuidv4 // Generate a UUID by default
   },
   imgId: {
     type: Number,
     unique: true
   },
-  type: String,
-  title: String,
-  image: Buffer, // Store image data as a Buffer
+  type: {
+    type: String,
+    required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: Buffer,
+    required: true
+  },
   account: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Account'
+    ref: 'Account',
+    required: true
   },
-  tags: [String] // Array of tags
-  
+  tags: {
+    type: [String],
+    required: true
+  }
 });
 
 wallpaperSchema.pre('save', async function(next) {

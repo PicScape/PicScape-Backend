@@ -15,6 +15,13 @@ app.use(bodyParser.json());
 connectToMongoDB();
 
 
+// Middleware to handle errors
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(400).send({ error: 'Invalid request' });
+});
+
+
 //ROUTES
 app.use('/auth', routes.authRoutes);
 app.use('/fetch', routes.fetchRoutes);
