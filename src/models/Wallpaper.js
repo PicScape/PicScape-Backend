@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
 function generateRandomImgId() {
-  return Math.floor(10000 + Math.random() * 90000); // Generate a 5-digit number
+  return Math.floor(10000 + Math.random() * 90000);
 }
 
 const wallpaperSchema = new mongoose.Schema({
   _id: {
     type: String,
     required: true,
-    default: uuidv4 // Generate a UUID by default
+    default: uuidv4
   },
   imgId: {
     type: Number,
@@ -43,7 +43,7 @@ wallpaperSchema.pre('save', async function(next) {
   if (!doc.imgId) {
     let imgId;
     do {
-      imgId = generateRandomImgId(); // Generate a new 5-digit number
+      imgId = generateRandomImgId();
       const existingPfp = await mongoose.model('Pfp').findOne({ imgId });
       const existingWallpaper = await mongoose.model('Wallpaper').findOne({ imgId });
       if (!existingPfp && !existingWallpaper) {

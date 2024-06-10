@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 
 const SALT_ROUNDS = 10;
 
-// Define the schema for accounts
 const accountSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -38,7 +37,6 @@ const accountSchema = new mongoose.Schema({
   },
 });
 
-// Pre-save hook to hash the password before saving it to the database
 accountSchema.pre('save', function(next) {
   const account = this;
 
@@ -55,7 +53,6 @@ accountSchema.pre('save', function(next) {
   });
 });
 
-// Method to compare given password with the database hash
 accountSchema.methods.comparePassword = function(candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) return callback(err);
@@ -63,7 +60,6 @@ accountSchema.methods.comparePassword = function(candidatePassword, callback) {
   });
 };
 
-// Model the schema
 const Account = mongoose.model('Account', accountSchema, 'Accounts');
 
 module.exports = Account;
