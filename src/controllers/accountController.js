@@ -102,4 +102,47 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getAccount, getUser };
+
+const editCredentials = async (req, res) => {
+  const token = req.headers['authorization'];
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+    if (err) return res.status(401).json({ error: 'Failed to authenticate token' });
+
+    try {
+      const account = await Account.findById(decoded.id);
+      if (!account) return res.status(404).json({ error: 'Account not found' });
+
+      if (req.body.username && req.body.username.trim() !== '') {
+        account.username = req.body.username.trim();
+      }
+      if (req.body.email && req.body.email.trim() !== '') {
+        account.email = req.body.email.trim();
+      }
+      if (req.body.password && req.body.password.trim() !== '') {
+        account.password = req.body.password.trim();
+      }
+
+      account.updated_at = new Date();
+
+      await account.save();
+      
+      const updatedUser = {
+        id: account._id,
+        username: account.username,
+        email: account.email,
+        password: account.password,
+        roles: account.roles,
+        created_at: account.created_at,
+        updated_at: account.updated_at,
+      };
+      
+      res.json({ message: 'Account updated successfully', user: updatedUser });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+};
+
+
+
+module.exports = { register, login, getAccount, getUser, editCredentials };
