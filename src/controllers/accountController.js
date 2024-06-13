@@ -106,42 +106,62 @@ const getUser = async (req, res) => {
 const editCredentials = async (req, res) => {
   const token = req.headers['authorization'];
   jwt.verify(token, JWT_SECRET, async (err, decoded) => {
-    if (err) return res.status(401).json({ error: 'Failed to authenticate token' });
+    if (err) {
+      console.error('Failed to authenticate token:', err);
+      return res.status(401).json({ error: 'Failed to authenticate token' });
+    }
 
     try {
       const account = await Account.findById(decoded.id);
-      if (!account) return res.status(404).json({ error: 'Account not found' });
+      if (!account) {
+        return res.status(404).json({ error: 'Account not found' });
+      }
 
-      if (req.body.username && req.body.username.trim() !== '') {
-        account.username = req.body.username.trim();
+      if (req.body.username) {
+        const trimmedUsername = req.body.username.trim();
+        if (trimmedUsername.length < 3 || trimmedUsername.length > 50) {
+          return res.status(400).json({ error: 'Username must be between 3 and 50 characters' });
+        }
+        account.username = trimmedUsername;
       }
-      if (req.body.email && req.body.email.trim() !== '') {
-        account.email = req.body.email.trim();
+
+      if (req.body.email) {
+        const trimmedEmail = req.body.email.trim();
+        if (!/\S+@\S+\.\S+/.test(trimmedEmail)) {
+          return res.status(400).json({ error: 'Invalid email format' });
+        }
+        account.email = trimmedEmail;
       }
-      if (req.body.password && req.body.password.trim() !== '') {
-        account.password = req.body.password.trim();
+
+      if (req.body.password) {
+        const trimmedPassword = req.body.password.trim();
+        if (trimmedPassword.length < 8) {
+          return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+        }
+        account.password = trimmedPassword;
       }
 
       account.updated_at = new Date();
 
       await account.save();
-      
+
       const updatedUser = {
         id: account._id,
         username: account.username,
         email: account.email,
-        password: account.password,
         roles: account.roles,
         created_at: account.created_at,
-        updated_at: account.updated_at,
+        updated_at: account.updated_at
       };
-      
+
       res.json({ message: 'Account updated successfully', user: updatedUser });
     } catch (error) {
+      console.error('Error updating account:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
 };
+
 
 
 
