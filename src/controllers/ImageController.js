@@ -1,5 +1,7 @@
 const Pfp = require('../models/Pfp');
 const Wallpaper = require('../models/Wallpaper');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = process.env;
 
 const findUploadById = async (imgId) => {
     let upload = await Pfp.findOne({ imgId: imgId });
@@ -64,7 +66,7 @@ const searchUploads = async (req, res) => {
     const { searchQuery, type } = req.body;
 
     try {
-        if (!searchQuery){
+        if (!searchQuery) {
             return res.status(400).json({ error: 'Invalid Query specified' });
         }
         const query = {
@@ -111,7 +113,7 @@ const getNewestUploads = async (req, res) => {
         } else {
             return res.status(400).json({ error: 'Invalid type specified' });
         }
-        
+
         const formattedResults = results.map(upload => ({
             id: upload._id,
             title: upload.title,
@@ -121,7 +123,7 @@ const getNewestUploads = async (req, res) => {
             imgId: upload.imgId,
             author: upload.account,
             uploadedDate: upload.uploadedDate,
-            
+
         }));
 
         res.json({ uploads: formattedResults });
@@ -129,4 +131,52 @@ const getNewestUploads = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads };
+
+
+const deleteUpload = async (req, res) => {
+    const token = req.headers['authorization'];
+    const { imgId } = req.params;
+
+    if (!token) {
+        return res.status(401).json({ error: 'JWT token is missing' });
+    }
+
+    jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+        if (err) {
+            console.error('Failed to authenticate token for deletion:', err);
+            return res.status(401).json({ error: 'Failed to authenticate token' });
+        }
+
+        try {
+            let upload = await findUploadById(imgId);
+
+            if (!upload) {
+                return res.status(404).json({ error: 'Upload not found' });
+            }
+
+            if (upload.account.toString() !== decoded.id.toString()) {
+                return res.status(401).json({ error: 'Unauthorized to delete this upload' });
+            }
+
+            if (upload instanceof Pfp) {
+                await Pfp.deleteOne({ imgId: imgId });
+            } else if (upload instanceof Wallpaper) {
+                await Wallpaper.deleteOne({ imgId: imgId });
+            } else {
+                return res.status(404).json({ error: 'Upload not found' });
+            }
+
+            console.log(`Upload ${imgId} deleted successfully by user ${decoded.id}`);
+            res.json({ message: 'Upload deleted successfully' });
+        } catch (error) {
+            if (error.name === 'CastError') {
+                return res.status(400).json({ error: 'Invalid upload ID format' });
+            }
+            console.error('Error deleting upload:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+};
+
+
+    module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload };
