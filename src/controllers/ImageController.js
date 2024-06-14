@@ -96,4 +96,36 @@ const searchUploads = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-module.exports = { getUploadData, viewUpload, searchUploads };
+
+
+const getNewestUploads = async (req, res) => {
+    const { type } = req.body;
+
+    try {
+        
+        
+
+        let results;
+        if (type === 'wallpaper') {
+            results = await Wallpaper.find();
+        } else if (type === 'pfp') {
+            results = await Pfp.find();
+        } else {
+            return res.status(400).json({ error: 'Invalid type specified' });
+        }
+        const formattedResults = results.map(upload => ({
+            id: upload._id,
+            title: upload.title,
+            type: upload.type,
+            tags: upload.tags,
+            imgId: upload.imgId,
+            author: upload.account,
+            createdAt: upload.createdAt,
+        }));
+
+        res.json({ uploads: formattedResults });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads };
