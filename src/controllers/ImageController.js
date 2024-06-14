@@ -12,7 +12,7 @@ const findUploadById = async (imgId) => {
 
 
 const getUploadData = async (req, res) => {
-    const { imgId } = req.body;
+    const { imgId } = req.params;
 
     try {
         const upload = await findUploadById(imgId);
