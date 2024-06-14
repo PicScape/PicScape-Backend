@@ -12,7 +12,7 @@ const findUploadById = async (imgId) => {
 
 
 const getUploadData = async (req, res) => {
-    const { imgId } = req.params;
+    const { imgId } = req.body;
 
     try {
         const upload = await findUploadById(imgId);
@@ -98,7 +98,7 @@ const searchUploads = async (req, res) => {
 };
 
 const getNewestUploads = async (req, res) => {
-    const { type } = req.body;
+    const { type } = req.query;
 
     try {
         let results;
