@@ -8,7 +8,7 @@ const convertToJPEG = async (buffer) => {
 
 const uploadPfp = async (req, res) => {
   const { file } = req;
-  const { tags, title } = req.body;
+  const { tags, title, description } = req.body;
 
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
@@ -25,12 +25,17 @@ const uploadPfp = async (req, res) => {
   if (!title) {
     return res.status(400).json({ error: 'Missing required title' });
   }
+  if (!description) {
+    return res.status(400).json({ error: 'Missing required description' });
+  }
+  
 
   try {
     const convertedBuffer = await convertToJPEG(file.buffer);
 
     const pfp = new Pfp({
       title: title,
+      description: description,
       type: "pfp",
       image: convertedBuffer,
       account: req.user.id,
@@ -50,7 +55,7 @@ const uploadPfp = async (req, res) => {
 
 const uploadWallpaper = async (req, res) => {
   const { file } = req;
-  const { tags, title } = req.body;
+  const { tags, title, description } = req.body;
 
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
@@ -67,12 +72,17 @@ const uploadWallpaper = async (req, res) => {
   if (!title) {
     return res.status(400).json({ error: 'Missing required title' });
   }
+  if (!description) {
+    return res.status(400).json({ error: 'Missing required description' });
+  }
+  
 
   try {
     const convertedBuffer = await convertToJPEG(file.buffer);
 
     const wallpaper = new Wallpaper({
       title: title,
+      description: description,
       type: "wallpaper",
       image: convertedBuffer,
       account: req.user.id,

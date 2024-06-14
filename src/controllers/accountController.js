@@ -190,6 +190,7 @@ const getUploads = async (req, res) => {
       const formattedResults = uploads.map(upload => ({
         id: upload._id,
         title: upload.title,
+        description: upload.description,
         type: upload.type,
         tags: upload.tags,
         imgId: upload.imgId,

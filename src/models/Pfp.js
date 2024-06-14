@@ -24,6 +24,9 @@ const pfpSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  description: {
+    type: String
+  },
   image: {
     type: Buffer,
     required: true

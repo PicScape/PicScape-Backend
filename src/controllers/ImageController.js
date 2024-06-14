@@ -23,6 +23,7 @@ const getUploadData = async (req, res) => {
         const response = {
             id: upload._id,
             title: upload.title,
+            description: upload.description,
             type: upload.type,
             tags: upload.tags,
             imgId: imgId,
@@ -84,6 +85,7 @@ const searchUploads = async (req, res) => {
         const formattedResults = results.map(upload => ({
             id: upload._id,
             title: upload.title,
+            description: upload.description,
             type: upload.type,
             tags: upload.tags,
             imgId: upload.imgId,
@@ -113,6 +115,7 @@ const getNewestUploads = async (req, res) => {
         const formattedResults = results.map(upload => ({
             id: upload._id,
             title: upload.title,
+            description: upload.description,
             type: upload.type,
             tags: upload.tags,
             imgId: upload.imgId,
