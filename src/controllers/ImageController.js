@@ -97,22 +97,19 @@ const searchUploads = async (req, res) => {
     }
 };
 
-
 const getNewestUploads = async (req, res) => {
     const { type } = req.body;
 
     try {
-        
-        
-
         let results;
         if (type === 'wallpaper') {
-            results = await Wallpaper.find();
+            results = await Wallpaper.find().sort({ uploadedDate: -1 });
         } else if (type === 'pfp') {
-            results = await Pfp.find();
+            results = await Pfp.find().sort({ uploadedDate: -1 });
         } else {
             return res.status(400).json({ error: 'Invalid type specified' });
         }
+        
         const formattedResults = results.map(upload => ({
             id: upload._id,
             title: upload.title,
@@ -120,7 +117,8 @@ const getNewestUploads = async (req, res) => {
             tags: upload.tags,
             imgId: upload.imgId,
             author: upload.account,
-            createdAt: upload.createdAt,
+            uploadedDate: upload.uploadedDate,
+            
         }));
 
         res.json({ uploads: formattedResults });
