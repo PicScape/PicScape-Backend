@@ -1,5 +1,8 @@
 const Account = require('../models/Account');
 const jwt = require('jsonwebtoken');
+const Pfp = require('../models/Pfp');
+const Wallpaper = require('../models/Wallpaper');
+
 const { JWT_SECRET } = process.env;
 
 const register = async (req, res) => {
@@ -163,6 +166,44 @@ const editCredentials = async (req, res) => {
 };
 
 
+const getUploads = async (req, res) => {
+  const token = req.headers['authorization'];
+  const type = req.query.type;
+  jwt.verify(token, JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      console.error('Failed to authenticate token:', err);
+      return res.status(401).json({ error: 'Failed to authenticate token' });
+    }
+    try {
+      const userId = decoded.id;
 
+      let uploads;
 
-module.exports = { register, login, getAccount, getUser, editCredentials };
+      if (type === 'wallpaper') {
+        uploads = await Wallpaper.find({ account: userId });
+      } else if (type === 'pfp') {
+        uploads = await Pfp.find({ account: userId });
+      } else {
+        return res.status(400).json({ error: 'Invalid type specified' });
+      }
+
+      const formattedResults = uploads.map(upload => ({
+        id: upload._id,
+        title: upload.title,
+        type: upload.type,
+        tags: upload.tags,
+        imgId: upload.imgId,
+        author: upload.account,
+        createdAt: upload.createdAt,
+      }));
+
+      res.json({ uploads: formattedResults });
+
+    } catch (error) {
+      console.error('Error fetching uploads:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+};
+
+module.exports = { register, login, getAccount, getUser, editCredentials, getUploads };

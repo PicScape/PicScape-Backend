@@ -6,6 +6,7 @@ const ImageController = require('../controllers/ImageController');
 router.get('/data/:imgId', ImageController.getUploadData);
 router.get('/view/:imgId', ImageController.viewUpload);
 router.get('/search', ImageController.searchUploads);
+router.get('/newest', ImageController.getNewestUploads);
 
 
 module.exports = router;

@@ -35,25 +35,38 @@ const wallpaperSchema = new mongoose.Schema({
   tags: {
     type: [String],
     required: true
+  },
+  uploadedDate: {
+    type: Date,
+    default: Date.now
   }
 });
 
 wallpaperSchema.pre('save', async function(next) {
   const doc = this;
-  if (!doc.imgId) {
-    let imgId;
-    do {
-      imgId = generateRandomImgId();
-      const existingPfp = await mongoose.model('Pfp').findOne({ imgId });
-      const existingWallpaper = await mongoose.model('Wallpaper').findOne({ imgId });
-      if (!existingPfp && !existingWallpaper) {
-        doc.imgId = imgId;
-        break;
-      }
-    } while (true);
+
+  if (doc.isNew) {
+    if (!doc.imgId) {
+      let imgId;
+      do {
+        imgId = generateRandomImgId();
+        const existingPfp = await mongoose.model('Pfp').findOne({ imgId });
+        const existingWallpaper = await mongoose.model('Wallpaper').findOne({ imgId });
+        if (!existingPfp && !existingWallpaper) {
+          doc.imgId = imgId;
+          break;
+        }
+      } while (true);
+    }
+
+    if (!doc.uploadedDate) {
+      doc.uploadedDate = new Date();
+    }
   }
+
   next();
 });
+
 
 const Wallpaper = mongoose.model('Wallpaper', wallpaperSchema, 'Wallpapers');
 
