@@ -5,5 +5,7 @@ const ImageController = require('../controllers/ImageController');
 
 router.get('/data/:imgId', ImageController.getUploadData);
 router.get('/view/:imgId', ImageController.viewUpload);
+router.get('/search', ImageController.searchUploads);
+
 
 module.exports = router;

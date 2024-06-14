@@ -8,5 +8,5 @@ module.exports = {
   authRoutes,
   fetchRoutes,
   uploadRoutes,
-  imageRoutes
+  imageRoutes,
 };

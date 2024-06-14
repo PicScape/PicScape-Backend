@@ -58,4 +58,42 @@ const viewUpload = async (req, res) => {
     }
 };
 
-module.exports = { getUploadData, viewUpload };
+
+const searchUploads = async (req, res) => {
+    const { searchQuery, type } = req.body;
+
+    try {
+        if (!searchQuery){
+            return res.status(400).json({ error: 'Invalid Query specified' });
+        }
+        const query = {
+            $or: [
+                { title: { $regex: searchQuery, $options: 'i' } },
+                { tags: { $regex: searchQuery, $options: 'i' } }
+            ]
+        };
+
+        let results;
+        if (type === 'wallpaper') {
+            results = await Wallpaper.find(query);
+        } else if (type === 'pfp') {
+            results = await Pfp.find(query);
+        } else {
+            return res.status(400).json({ error: 'Invalid type specified' });
+        }
+        const formattedResults = results.map(upload => ({
+            id: upload._id,
+            title: upload.title,
+            type: upload.type,
+            tags: upload.tags,
+            imgId: upload.imgId,
+            author: upload.account,
+            createdAt: upload.createdAt,
+        }));
+
+        res.json({ uploads: formattedResults });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+module.exports = { getUploadData, viewUpload, searchUploads };
