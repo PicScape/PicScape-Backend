@@ -114,36 +114,42 @@ const getNewestUploads = async (req, res) => {
         } else {
             return res.status(400).json({ error: 'Invalid type specified' });
         }
+
         const formattedResults = await Promise.all(results.map(async (upload) => {
+            let username = '';
 
             try {
                 const user = await Account.findById(upload.account);
-                if (!user) {
-                    throw new Error(`User not found for account: ${upload.account}`);
+                if (user) {
+                    username = user.username;
+                } else {
+                    console.warn(`User not found for account: ${upload.account}`);
                 }
-
-                return {
-                    id: upload._id,
-                    title: upload.title,
-                    description: upload.description,
-                    type: upload.type,
-                    tags: upload.tags,
-                    imgId: upload.imgId,
-                    authorId: upload.account,
-                    username: user.username,
-                    uploadedDate: upload.uploadedDate,
-                };
             } catch (error) {
-                console.error(`Error fetching user for upload ${upload._id}: ${error.message}`);
-                throw error;
+                console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
             }
+
+            return {
+                id: upload._id,
+                title: upload.title,
+                description: upload.description,
+                type: upload.type,
+                tags: upload.tags,
+                imgId: upload.imgId,
+                authorId: upload.account,
+                username,
+                uploadedDate: upload.uploadedDate,
+            };
         }));
 
         res.json({ uploads: formattedResults });
     } catch (error) {
+        console.error(`Error in getNewestUploads: ${error.message}`);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
 
 
 const deleteUpload = async (req, res) => {
