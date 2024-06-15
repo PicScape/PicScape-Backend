@@ -53,6 +53,9 @@ const viewUpload = async (req, res) => {
         }
 
         res.set('Content-Type', 'image/jpeg');
+
+        res.set('Content-Disposition', `inline; filename="${imgId}.jpg"`);
+
         res.send(upload.image);
     } catch (error) {
         if (error.name === 'CastError') {
