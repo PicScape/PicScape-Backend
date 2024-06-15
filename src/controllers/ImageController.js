@@ -137,7 +137,7 @@ const getNewestUploads = async (req, res) => {
                 tags: upload.tags,
                 imgId: upload.imgId,
                 authorId: upload.account,
-                username,
+                username: username,
                 uploadedDate: upload.uploadedDate,
             };
         }));
