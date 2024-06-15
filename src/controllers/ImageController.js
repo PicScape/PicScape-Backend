@@ -1,5 +1,6 @@
 const Pfp = require('../models/Pfp');
 const Wallpaper = require('../models/Wallpaper');
+const Account = require('../models/Account');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
@@ -113,17 +114,29 @@ const getNewestUploads = async (req, res) => {
         } else {
             return res.status(400).json({ error: 'Invalid type specified' });
         }
+        const formattedResults = await Promise.all(results.map(async (upload) => {
 
-        const formattedResults = results.map(upload => ({
-            id: upload._id,
-            title: upload.title,
-            description: upload.description,
-            type: upload.type,
-            tags: upload.tags,
-            imgId: upload.imgId,
-            author: upload.account,
-            uploadedDate: upload.uploadedDate,
+            try {
+                const user = await Account.findById(upload.account);
+                if (!user) {
+                    throw new Error(`User not found for account: ${upload.account}`);
+                }
 
+                return {
+                    id: upload._id,
+                    title: upload.title,
+                    description: upload.description,
+                    type: upload.type,
+                    tags: upload.tags,
+                    imgId: upload.imgId,
+                    authorId: upload.account,
+                    username: user.username,
+                    uploadedDate: upload.uploadedDate,
+                };
+            } catch (error) {
+                console.error(`Error fetching user for upload ${upload._id}: ${error.message}`);
+                throw error;
+            }
         }));
 
         res.json({ uploads: formattedResults });
