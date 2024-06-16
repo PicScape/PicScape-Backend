@@ -8,7 +8,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
-app.use(cors());
+app.use(cors({
+  origin: '*', // Allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type,Authorization'
+}));
+
 app.use(bodyParser.json());
 
 //MONGO
