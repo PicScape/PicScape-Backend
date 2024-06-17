@@ -106,14 +106,19 @@ const searchUploads = async (req, res) => {
 };
 
 const getNewestUploads = async (req, res) => {
-    const { type } = req.query;
+    const { type, page } = req.query;
+    const limit = 42;
 
     try {
+        if (!page || !Number.isInteger(+page) || +page <= 0) {
+            return res.status(400).json({ error: 'Invalid page number specified' });
+        }
+
         let results;
         if (type === 'wallpaper') {
-            results = await Wallpaper.find().sort({ uploadedDate: -1 });
+            results = await Wallpaper.find().sort({ uploadedDate: -1 }).skip((page - 1) * limit).limit(limit);
         } else if (type === 'pfp') {
-            results = await Pfp.find().sort({ uploadedDate: -1 });
+            results = await Pfp.find().sort({ uploadedDate: -1 }).skip((page - 1) * limit).limit(limit);
         } else {
             return res.status(400).json({ error: 'Invalid type specified' });
         }
@@ -145,7 +150,11 @@ const getNewestUploads = async (req, res) => {
             };
         }));
 
-        res.json({ uploads: formattedResults });
+        res.json({ 
+            uploads: formattedResults,
+            currentPage: +page,
+            totalPages: Math.ceil(formattedResults.length / limit)
+        });
     } catch (error) {
         console.error(`Error in getNewestUploads: ${error.message}`);
         res.status(500).json({ error: 'Internal Server Error' });
