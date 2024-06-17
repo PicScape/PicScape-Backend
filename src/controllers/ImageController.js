@@ -143,7 +143,7 @@ const getNewestUploads = async (req, res) => {
                 description: upload.description,
                 type: upload.type,
                 tags: upload.tags,
-                imgId: upload.imgId + "test",
+                imgId: upload.imgId,
                 authorId: upload.account,
                 username: username,
                 uploadedDate: upload.uploadedDate,
