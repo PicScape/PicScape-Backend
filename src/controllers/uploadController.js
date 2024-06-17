@@ -61,7 +61,7 @@ const uploadWallpaper = async (req, res) => {
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
-  if (file.size > 5 * 1024 * 1024) {
+  if (file.size > 50 * 1024 * 1024) {
     return res.status(400).json({ error: 'File size exceeds maximum limit (5MB)' });
   }
 
