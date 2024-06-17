@@ -138,12 +138,12 @@ const getNewestUploads = async (req, res) => {
             }
 
             return {
-                id: upload._id + "tfestf",
+                id: upload._id,
                 title: upload.title,
                 description: upload.description,
                 type: upload.type,
                 tags: upload.tags,
-                imgId: upload.imgId,
+                imgId: upload.imgId + "test",
                 authorId: upload.account,
                 username: username,
                 uploadedDate: upload.uploadedDate,
