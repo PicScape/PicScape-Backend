@@ -3,6 +3,8 @@ const Wallpaper = require('../models/Wallpaper');
 const Account = require('../models/Account');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
+const sharp = require('sharp');
+
 
 const findUploadById = async (imgId) => {
     let upload = await Pfp.findOne({ imgId: imgId });
@@ -45,6 +47,7 @@ const getUploadData = async (req, res) => {
 
 const viewUpload = async (req, res) => {
     const { imgId } = req.params;
+    const { lowRes } = req.query;
 
     try {
         const upload = await findUploadById(imgId);
@@ -53,10 +56,17 @@ const viewUpload = async (req, res) => {
         }
 
         res.set('Content-Type', 'image/jpeg');
-
         res.set('Content-Disposition', `inline; filename="${imgId}.jpg"`);
 
-        res.send(upload.image);
+        if (lowRes === 'true') {
+            const lowResImage = await sharp(upload.image)
+                .resize({ width: 400 })
+                .jpeg({ quality: 50 })
+                .toBuffer();
+            res.send(lowResImage);
+        } else {
+            res.send(upload.image);
+        }
     } catch (error) {
         if (error.name === 'CastError') {
             return res.status(400).json({ error: 'Invalid upload ID format' });
