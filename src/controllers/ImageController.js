@@ -117,7 +117,7 @@ const searchUploads = async (req, res) => {
 
 const getNewestUploads = async (req, res) => {
     const { type, page } = req.query;
-    const limit = 30;
+    const limit = 40;
 
     try {
         if (!page || !Number.isInteger(+page) || +page <= 0) {
