@@ -68,7 +68,7 @@ const viewUpload = async (req, res) => {
             res.send(upload.image);
         }
     } catch (error) {
-        if (error.name === 'Validation error') {
+        if (error.name === 'CastError') {
             return res.status(400).json({ error: 'Invalid upload ID format' });
         }
         res.status(500).json({ error: 'Internal Server Error' });
