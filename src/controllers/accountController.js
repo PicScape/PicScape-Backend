@@ -41,7 +41,7 @@ const login = async (req, res) => {
     const account = await Account.findOne({ email });
 
     if (!password || !email || !account) {
-      return res.status(400).send({ error: 'Invalid email or password' });
+      return res.status(400).send({ error: 'Invalid email or passwordd' });
     }
 
 
