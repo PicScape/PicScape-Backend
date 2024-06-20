@@ -31,6 +31,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    pull_policy: build
+
 
 volumes:
   mongodb_data:
