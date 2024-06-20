@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 const User = require('../models/Account');
 
+
 function auth(req, res, next) {
   const token = req.headers['authorization'];
 
