@@ -76,6 +76,7 @@ const getAccount = async (req, res) => {
         username: account.username,
         email: account.email,
         roles: account.roles,
+        isAdmin: account.isAdmin,
         created_at: account.created_at
       };
       res.json({ user });
