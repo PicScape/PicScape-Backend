@@ -44,10 +44,6 @@ const login = async (req, res) => {
       return res.status(400).send({ error: 'Invalid email or password' });
     }
 
-
-
-
-
     account.comparePassword(password, (err, isMatch) => {
       if (err) return res.status(500).send({ error: 'Server error' });
       if (!isMatch) return res.status(400).send({ error: 'Invalid email or password' });
