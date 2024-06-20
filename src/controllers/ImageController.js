@@ -190,14 +190,16 @@ const deleteUpload = async (req, res) => {
 
         try {
             let upload = await findUploadById(imgId);
-
+            const account = await Account.findOne({'_id': decoded.id})
+            console.log(account)
             if (!upload) {
                 return res.status(404).json({ error: 'Upload not found' });
             }
 
-            if (upload.account.toString() !== decoded.id.toString()) {
+            if (!account.isAdmin && upload.account.toString() !== decoded.id.toString()) {
                 return res.status(401).json({ error: 'Unauthorized to delete this upload' });
             }
+
 
             if (upload instanceof Pfp) {
                 await Pfp.deleteOne({ imgId: imgId });
