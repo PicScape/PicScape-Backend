@@ -41,7 +41,7 @@ const login = async (req, res) => {
     const account = await Account.findOne({ email });
 
     if (!password || !email || !account) {
-      return res.status(400).send({ error: 'Invalid email or passwordd' });
+      return res.status(400).send({ error: 'Invalid email or password' });
     }
 
 
@@ -50,7 +50,7 @@ const login = async (req, res) => {
 
     account.comparePassword(password, (err, isMatch) => {
       if (err) return res.status(500).send({ error: 'Server error' });
-      if (!isMatch) return res.status(400).send({ error: 'Invalid email or passwordd' });
+      if (!isMatch) return res.status(400).send({ error: 'Invalid email or password' });
 
       const token = jwt.sign(
         { id: account._id, username: account.username, email: account.email },
