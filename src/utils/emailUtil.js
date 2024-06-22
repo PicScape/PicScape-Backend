@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 async function sendVerifyEmail(userId) {
-    const { BREVO_API_KEY } = process.env;
+    const { BASE_URL, BREVO_API_KEY } = process.env;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
     const Account = require('../models/Account');
@@ -57,7 +57,7 @@ async function sendVerifyEmail(userId) {
           <h2>Verify Your Email Address</h2>
           <p>Dear ${account.username},</p>
           <p>Welcome to PicScape! Please click the button below to verify your email address:</p>
-          <p><a href="https://picscape.aio-web.xyz" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a></p>
+          <p><a href="${BASE_URL}/auth/activate?activationToken=${account.activationToken}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a></p>
           <p>If you didn't create an account, you can safely ignore this email.</p>
           <p>Thank you,<br> Your PicScape Team</p>
         </div>

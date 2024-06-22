@@ -52,6 +52,9 @@ const login = async (req, res) => {
     account.comparePassword(password, async (err, isMatch) => {
       if (err) return res.status(500).send({ error: 'Server error' });
       if (!isMatch) return res.status(400).send({ error: 'Invalid email or password' });
+      if (!account.isActivated) {
+        return res.status(403).json({ error: 'Account not verified' });
+      }
 
       const verificationCode = crypto.randomBytes(3).toString('hex').toUpperCase();
       const verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000);
@@ -80,7 +83,9 @@ const verifyLoginCode = async (req, res) => {
   try {
     const { email, code } = req.body;
     const account = await Account.findOne({ email });
-
+    if (!account.isActivated) {
+      return res.status(403).json({ error: 'Account not verified' });
+    }
     if (!account) {
       return res.status(400).send({ error: 'Invalid email or code' });
     }
@@ -105,7 +110,39 @@ const verifyLoginCode = async (req, res) => {
   }
 };
 
+const activateAccount = async (req, res) => {
+  try {
+    const { activationToken } = req.query;
 
+    let account = await Account.findOne({ activationToken });
+
+    if (!account) {
+      return res.status(400).send({ error: 'Account not found' });
+    }
+
+    if (account.isActivated) {
+      return res.status(400).json({ error: 'Error activating account' });
+    }
+
+    const token = jwt.sign(
+      { id: account._id, username: account.username, email: account.email },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    account.isActivated = true;
+
+
+    await account.save();
+
+
+
+    res.send({ message: 'Activation successful!', token });
+  } catch (error) {
+    console.error('Error activating account');
+    res.status(400).send({ error: error.message });
+  }
+};
 
 
 const getAccount = async (req, res) => {
@@ -252,4 +289,4 @@ const getUploads = async (req, res) => {
   });
 };
 
-module.exports = { register, login, getAccount, getUser, editCredentials, getUploads, verifyLoginCode };
+module.exports = { register, login, getAccount, getUser, editCredentials, getUploads, verifyLoginCode, activateAccount };

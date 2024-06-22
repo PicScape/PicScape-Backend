@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const SALT_ROUNDS = 10;
 
@@ -39,14 +40,23 @@ const accountSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  isActivated: {
+    type: Boolean,
+    default: false,
+  },
+  activationToken: {
+    type: String,
+    default: crypto.randomBytes(32).toString('hex')
+  },
   verificationCode: { 
     type: String 
   },
   verificationCodeExpires: { 
-    type: Date
+    type: Date 
   }
 });
 
+// Pre-save hook to hash the password
 accountSchema.pre('save', function (next) {
   const account = this;
 
@@ -60,6 +70,30 @@ accountSchema.pre('save', function (next) {
       account.password = hash;
       next();
     });
+  });
+});
+
+// Pre-save hook to ensure unique activationToken
+accountSchema.pre('save', function (next) {
+  const account = this;
+
+  if (!account.isModified('activationToken')) return next();
+
+  function generateUniqueToken(callback) {
+    const token = crypto.randomBytes(32).toString('hex');
+    Account.findOne({ activationToken: token }, (err, existingAccount) => {
+      if (err) return next(err);
+      if (existingAccount) {
+        generateUniqueToken(callback);
+      } else {
+        callback(token);
+      }
+    });
+  }
+
+  generateUniqueToken((uniqueToken) => {
+    account.activationToken = uniqueToken;
+    next();
   });
 });
 
