@@ -17,6 +17,7 @@ services:
       PORT: ${PORT}
       SECRET: ${SECRET}
       JWT_SECRET: ${JWT_SECRET}
+      BREVO_API_KEY: ${BREVO_API_KEY}
 
   mongo:
     command: mongod --quiet --logpath /dev/null 

@@ -2,6 +2,7 @@ const Account = require('../models/Account');
 const jwt = require('jsonwebtoken');
 const Pfp = require('../models/Pfp');
 const Wallpaper = require('../models/Wallpaper');
+const sendVerifyEmail = require('../utils/emailUtil');
 
 const { JWT_SECRET } = process.env;
 
@@ -28,6 +29,9 @@ const register = async (req, res) => {
 
     const newAccount = new Account({ username, email, password });
     await newAccount.save();
+    sendVerifyEmail(newAccount.id)
+    
+    
     res.status(201).send({ message: 'Account created successfully!' });
   } catch (error) {
     res.status(400).send({ error: error.message });
