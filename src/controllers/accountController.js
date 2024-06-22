@@ -2,6 +2,8 @@ const Account = require('../models/Account');
 const jwt = require('jsonwebtoken');
 const Pfp = require('../models/Pfp');
 const Wallpaper = require('../models/Wallpaper');
+const emailUtil = require('../utils/emailUtil');
+const crypto = require('crypto');
 
 const { JWT_SECRET } = process.env;
 
@@ -28,6 +30,9 @@ const register = async (req, res) => {
 
     const newAccount = new Account({ username, email, password });
     await newAccount.save();
+    emailUtil.sendVerifyEmail(newAccount.id)
+    
+    
     res.status(201).send({ message: 'Account created successfully!' });
   } catch (error) {
     res.status(400).send({ error: error.message });
@@ -44,21 +49,101 @@ const login = async (req, res) => {
       return res.status(400).send({ error: 'Invalid email or password' });
     }
 
-    account.comparePassword(password, (err, isMatch) => {
+    account.comparePassword(password, async (err, isMatch) => {
       if (err) return res.status(500).send({ error: 'Server error' });
       if (!isMatch) return res.status(400).send({ error: 'Invalid email or password' });
+      if (!account.isActivated) {
+        return res.status(403).json({ error: 'Account not verified' });
+      }
 
-      const token = jwt.sign(
-        { id: account._id, username: account.username, email: account.email },
-        JWT_SECRET,
-        { expiresIn: '7d' }
-      );
-      res.send({ message: 'Login successful!', token });
+      const verificationCode = crypto.randomBytes(3).toString('hex').toUpperCase();
+      const verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+      account.verificationCode = verificationCode;
+      account.verificationCodeExpires = verificationCodeExpires;
+      await account.save();
+
+      try {
+        await emailUtil.sendLoginVerificationEmail(account._id, verificationCode);
+      } catch (emailError) {
+        console.error('Error sending login verification email:', emailError);
+        return res.status(500).send({ error: 'Failed to send login verification email' });
+      }
+
+      res.send({ message: 'Verification email sent. Please check your email to verify your login.' });
     });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
 };
+
+
+
+const verifyLoginCode = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    const account = await Account.findOne({ email });
+    if (!account.isActivated) {
+      return res.status(403).json({ error: 'Account not verified' });
+    }
+    if (!account) {
+      return res.status(400).send({ error: 'Invalid email or code' });
+    }
+
+    if (account.verificationCode !== code || new Date() > account.verificationCodeExpires) {
+      return res.status(400).send({ error: 'Invalid or expired code' });
+    }
+
+    account.verificationCode = undefined;
+    account.verificationCodeExpires = undefined;
+    await account.save();
+
+    const token = jwt.sign(
+      { id: account._id, username: account.username, email: account.email },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.send({ message: 'Verification successful!', token });
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+};
+
+const activateAccount = async (req, res) => {
+  try {
+    const { activationToken } = req.query;
+
+    let account = await Account.findOne({ activationToken });
+
+    if (!account) {
+      return res.status(400).send({ error: 'Account not found' });
+    }
+
+    if (account.isActivated) {
+      return res.status(400).json({ error: 'Error activating account' });
+    }
+
+    const token = jwt.sign(
+      { id: account._id, username: account.username, email: account.email },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    account.isActivated = true;
+
+
+    await account.save();
+
+
+
+    res.send({ message: 'Activation successful!', token });
+  } catch (error) {
+    console.error('Error activating account');
+    res.status(400).send({ error: error.message });
+  }
+};
+
 
 const getAccount = async (req, res) => {
   const token = req.headers['authorization'];
@@ -204,4 +289,4 @@ const getUploads = async (req, res) => {
   });
 };
 
-module.exports = { register, login, getAccount, getUser, editCredentials, getUploads };
+module.exports = { register, login, getAccount, getUser, editCredentials, getUploads, verifyLoginCode, activateAccount };
