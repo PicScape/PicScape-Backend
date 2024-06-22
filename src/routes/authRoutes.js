@@ -4,6 +4,7 @@ const accountController = require('../controllers/accountController');
 
 router.post('/register', accountController.register);
 router.post('/login', accountController.login);
+router.post('/verify', accountController.verifyLoginCode);
 router.put('/edit', accountController.editCredentials);
 
 

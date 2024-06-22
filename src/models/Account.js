@@ -39,9 +39,15 @@ const accountSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  verificationCode: { 
+    type: String 
+  },
+  verificationCodeExpires: { 
+    type: Date
+  }
 });
 
-accountSchema.pre('save', function(next) {
+accountSchema.pre('save', function (next) {
   const account = this;
 
   if (!account.isModified('password')) return next();
@@ -57,7 +63,7 @@ accountSchema.pre('save', function(next) {
   });
 });
 
-accountSchema.methods.comparePassword = function(candidatePassword, callback) {
+accountSchema.methods.comparePassword = function (candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) return callback(err);
     callback(null, isMatch);
