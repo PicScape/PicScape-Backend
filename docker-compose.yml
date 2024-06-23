@@ -16,6 +16,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       BREVO_API_KEY: ${BREVO_API_KEY}
       BASE_URL: ${BASE_URL}
+      BREVO_EMAIL: ${BREVO_EMAIL}
     restart: always
     pull_policy: build
     

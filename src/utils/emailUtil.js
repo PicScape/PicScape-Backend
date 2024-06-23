@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 async function sendVerifyEmail(userId) {
-    const { BASE_URL, BREVO_API_KEY } = process.env;
+    const { BASE_URL, BREVO_API_KEY, BREVO_EMAIL } = process.env;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
     const Account = require('../models/Account');
@@ -68,7 +68,7 @@ async function sendVerifyEmail(userId) {
 
     sendSmtpEmail.sender = {
       "name": "PicScape",
-      "email": "picscape@aio-web.xyz"
+      "email": BREVO_EMAIL
     };
 
     sendSmtpEmail.to = [
@@ -159,7 +159,7 @@ async function sendLoginVerificationEmail(userId, verificationCode) {
 
   sendSmtpEmail.sender = {
     "name": "PicScape",
-    "email": "picscape@aio-web.xyz"
+    "email": BREVO_EMAIL
   };
 
   sendSmtpEmail.to = [
