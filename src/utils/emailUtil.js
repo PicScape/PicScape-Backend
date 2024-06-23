@@ -94,7 +94,7 @@ async function sendVerifyEmail(userId) {
 }
 
 async function sendLoginVerificationEmail(userId, verificationCode) {
-  const { BREVO_API_KEY } = process.env;
+  const { BREVO_API_KEY, BREVO_EMAIL } = process.env;
 
   let apiInstance = new brevo.TransactionalEmailsApi();
   const Account = require('../models/Account');
