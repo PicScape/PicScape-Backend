@@ -139,7 +139,7 @@ const activateAccount = async (req, res) => {
 
     res.send({ message: 'Activation successful!', token });
   } catch (error) {
-    console.error('Error activating account');
+    console.error('Error activating account', error);
     res.status(400).send({ error: error.message });
   }
 };
