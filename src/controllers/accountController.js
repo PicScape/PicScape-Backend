@@ -114,7 +114,7 @@ const activateAccount = async (req, res) => {
   try {
     const { activationToken } = req.query;
 
-    let account = await Account.findOne({ activationToken });
+    let account = await Account.findOne({ activationToken: activationToken });
 
     if (!account) {
       return res.status(400).send({ error: 'Account not found' });
