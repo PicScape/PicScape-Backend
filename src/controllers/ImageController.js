@@ -45,6 +45,7 @@ const getUploadData = async (req, res) => {
     }
 };
 
+
 const viewUpload = async (req, res) => {
     const { imgId } = req.params;
     const { lowRes } = req.query;
