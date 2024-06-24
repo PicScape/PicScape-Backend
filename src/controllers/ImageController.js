@@ -60,10 +60,20 @@ const viewUpload = async (req, res) => {
         res.set('Content-Disposition', `inline; filename="${imgId}.jpg"`);
 
         if (lowRes === 'true') {
-            const lowResImage = await sharp(upload.image)
-                .resize({ width: 400 })
-                .jpeg({ quality: 50 })
-                .toBuffer();
+            let lowResImage;
+
+            if (upload instanceof Wallpaper) {
+                lowResImage = await sharp(upload.image)
+                    .resize({ width: 400 })
+                    .jpeg({ quality: 50 })
+                    .toBuffer();
+            } else if (upload instanceof Pfp) {
+                lowResImage = await sharp(upload.image)
+                    .resize({ width: 100 })
+                    .jpeg({ quality: 40 })
+                    .toBuffer();
+            }
+
             res.send(lowResImage);
         } else {
             res.send(upload.image);
