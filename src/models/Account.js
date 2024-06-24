@@ -90,6 +90,7 @@ accountSchema.pre('save', function (next) {
       }
     });
   }
+  
 
   generateUniqueToken((uniqueToken) => {
     account.activationToken = uniqueToken;
