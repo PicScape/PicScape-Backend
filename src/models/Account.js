@@ -46,7 +46,7 @@ const accountSchema = new mongoose.Schema({
   },
   activationToken: {
     type: String,
-    default: crypto.randomBytes(32).toString('hex')
+    unique: true,
   },
   verificationCode: { 
     type: String 
@@ -56,7 +56,6 @@ const accountSchema = new mongoose.Schema({
   }
 });
 
-// Pre-save hook to hash the password
 accountSchema.pre('save', function (next) {
   const account = this;
 
@@ -73,29 +72,18 @@ accountSchema.pre('save', function (next) {
   });
 });
 
-// Pre-save hook to ensure unique activationToken
 accountSchema.pre('save', function (next) {
   const account = this;
 
-  if (!account.isModified('activationToken')) return next();
-
-  function generateUniqueToken(callback) {
-    const token = crypto.randomBytes(32).toString('hex');
-    Account.findOne({ activationToken: token }, (err, existingAccount) => {
+  if (!account.activationToken) {
+    crypto.randomBytes(32, (err, buffer) => {
       if (err) return next(err);
-      if (existingAccount) {
-        generateUniqueToken(callback);
-      } else {
-        callback(token);
-      }
+      account.activationToken = buffer.toString('hex');
+      next();
     });
-  }
-  
-
-  generateUniqueToken((uniqueToken) => {
-    account.activationToken = uniqueToken;
+  } else {
     next();
-  });
+  }
 });
 
 accountSchema.methods.comparePassword = function (candidatePassword, callback) {
