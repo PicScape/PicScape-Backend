@@ -8,6 +8,7 @@ router.get('/view/:imgId', ImageController.viewUpload);
 router.get('/search', ImageController.searchUploads);
 router.get('/newest', ImageController.getNewestUploads);
 router.delete('/delete/:imgId', ImageController.deleteUpload);
+router.get('/myscape', ImageController.getUploadsFromUser);
 
 
 module.exports = router;
