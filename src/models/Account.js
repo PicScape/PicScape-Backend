@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const fs = require('fs');
 
 const SALT_ROUNDS = 10;
+
+const imageToBase64 = (path) => {
+  return fs.readFileSync(path, { encoding: 'base64' });
+};
 
 const accountSchema = new mongoose.Schema({
   username: {
@@ -53,6 +58,9 @@ const accountSchema = new mongoose.Schema({
   },
   verificationCodeExpires: { 
     type: Date 
+  },
+  pfp: {
+    type: String,
   }
 });
 
@@ -84,6 +92,15 @@ accountSchema.pre('save', function (next) {
   } else {
     next();
   }
+});
+
+accountSchema.pre('save', function (next) {
+  const account = this;
+
+  if (!account.pfp) {
+    account.pfp = imageToBase64('./src/assets/logo.png');
+  }
+  next();
 });
 
 accountSchema.methods.comparePassword = function (candidatePassword, callback) {
