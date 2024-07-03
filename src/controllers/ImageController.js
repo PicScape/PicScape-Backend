@@ -126,6 +126,76 @@ const searchUploads = async (req, res) => {
     }
 };
 
+
+const getUploadsFromUser = async (req, res) => {
+    const { userid, type, page } = req.query;
+    const limit = 30;
+
+    try {
+        if (!userid) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
+        if (!page || !Number.isInteger(+page) || +page <= 0) {
+            return res.status(400).json({ error: 'Invalid page number specified' });
+        }
+
+        const query = { account: userid };
+
+        let model;
+        if (type === 'wallpaper') {
+            model = Wallpaper;
+        } else if (type === 'pfp') {
+            model = Pfp;
+        } else {
+            return res.status(400).json({ error: 'Invalid type specified' });
+        }
+
+        const totalCount = await model.countDocuments(query);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const uploads = await model.find(query)
+            .sort({ uploadedDate: -1 })
+            .skip((+page - 1) * limit)
+            .limit(limit);
+
+        const formattedResults = await Promise.all(uploads.map(async (upload) => {
+            let username = '';
+
+            try {
+                const user = await Account.findById(upload.account);
+                if (user) {
+                    username = user.username;
+                } 
+            } catch (error) {
+                console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
+            }
+
+            return {
+                id: upload._id,
+                title: upload.title,
+                description: upload.description,
+                type: upload.type,
+                tags: upload.tags,
+                imgId: upload.imgId,
+                authorId: upload.account,
+                username: username,
+                uploadedDate: upload.uploadedDate,
+            };
+        }));
+
+        res.json({ 
+            uploads: formattedResults,
+            currentPage: +page,
+            totalPages: totalPages
+        });
+    } catch (error) {
+        console.error(`Error in getUploadsFromUser: ${error.message}`);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 const getNewestUploads = async (req, res) => {
     const { type, page } = req.query;
     const limit = 40;
@@ -151,9 +221,7 @@ const getNewestUploads = async (req, res) => {
                 const user = await Account.findById(upload.account);
                 if (user) {
                     username = user.username;
-                } else {
-                    console.warn(`User not found for account: ${upload.account}`);
-                }
+                } 
             } catch (error) {
                 console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
             }
@@ -233,4 +301,4 @@ const deleteUpload = async (req, res) => {
 };
 
 
-    module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload };
+    module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload, getUploadsFromUser };

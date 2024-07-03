@@ -289,4 +289,30 @@ const getUploads = async (req, res) => {
   });
 };
 
-module.exports = { register, login, getAccount, getUser, editCredentials, getUploads, verifyLoginCode, activateAccount };
+const getPfp = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const account = await Account.findById(userId);
+
+    if (!account) {
+      return res.status(404).json({ error: 'Account not found' });
+    }
+
+    if (!account.pfp) {
+      return res.status(404).json({ error: 'Profile picture not found' });
+    }
+
+    const base64Image = account.pfp.split(';base64,').pop();
+    const imgBuffer = Buffer.from(base64Image, 'base64');
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+      'Content-Length': imgBuffer.length
+    });
+    res.end(imgBuffer);
+  } catch (error) {
+    console.error('Error fetching profile picture:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports = { register, login, getAccount, getUser, editCredentials, getUploads, verifyLoginCode, activateAccount, getPfp };
