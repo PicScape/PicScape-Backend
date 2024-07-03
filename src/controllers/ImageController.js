@@ -166,9 +166,7 @@ const getUploadsFromUser = async (req, res) => {
                 const user = await Account.findById(upload.account);
                 if (user) {
                     username = user.username;
-                } else {
-                    console.warn(`User not found for account: ${upload.account}`);
-                }
+                } 
             } catch (error) {
                 console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
             }
@@ -223,9 +221,7 @@ const getNewestUploads = async (req, res) => {
                 const user = await Account.findById(upload.account);
                 if (user) {
                     username = user.username;
-                } else {
-                    console.warn(`User not found for account: ${upload.account}`);
-                }
+                } 
             } catch (error) {
                 console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
             }
