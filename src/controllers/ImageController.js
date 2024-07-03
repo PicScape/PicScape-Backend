@@ -126,11 +126,10 @@ const searchUploads = async (req, res) => {
     }
 };
 
+
 const getUploadsFromUser = async (req, res) => {
-    const { userid } = req.query;
-    const { page } = req.query;
-    const { type } = req.query;
-    const limit = 40;
+    const { userid, type, page } = req.query;
+    const limit = 30;
 
     try {
         if (!userid) {
@@ -143,16 +142,22 @@ const getUploadsFromUser = async (req, res) => {
 
         const query = { account: userid };
 
-        const totalCount = await Pfp.countDocuments(query) + await Wallpaper.countDocuments(query);
-        
-        let uploads;
+        let model;
         if (type === 'wallpaper') {
-            uploads = await Wallpaper.find(query).sort({ uploadedDate: -1 }).skip((page - 1) * limit).limit(limit);
+            model = Wallpaper;
         } else if (type === 'pfp') {
-            uploads = await Pfp.find(query).sort({ uploadedDate: -1 }).skip((page - 1) * limit).limit(limit);
+            model = Pfp;
         } else {
             return res.status(400).json({ error: 'Invalid type specified' });
         }
+
+        const totalCount = await model.countDocuments(query);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const uploads = await model.find(query)
+            .sort({ uploadedDate: -1 })
+            .skip((+page - 1) * limit)
+            .limit(limit);
 
         const formattedResults = await Promise.all(uploads.map(async (upload) => {
             let username = '';
@@ -181,17 +186,16 @@ const getUploadsFromUser = async (req, res) => {
             };
         }));
 
-        res.json({
+        res.json({ 
             uploads: formattedResults,
             currentPage: +page,
-            totalPages: Math.ceil(totalCount / limit)
+            totalPages: totalPages
         });
     } catch (error) {
         console.error(`Error in getUploadsFromUser: ${error.message}`);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 
 
 const getNewestUploads = async (req, res) => {
