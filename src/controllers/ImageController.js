@@ -32,8 +32,8 @@ const getUploadData = async (req, res) => {
             type: upload.type,
             tags: upload.tags,
             imgId: imgId,
-            author: upload.account,
-            createdAt: upload.createdAt,
+            authorId: upload.account,
+            uploadedDate: upload.uploadedDate,
         };
 
         res.json({ upload: response });
