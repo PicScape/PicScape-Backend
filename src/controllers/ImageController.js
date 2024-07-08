@@ -15,7 +15,6 @@ const findUploadById = async (imgId) => {
 };
 
 
-
 const getUploadData = async (req, res) => {
     const { imgId } = req.params;
 
