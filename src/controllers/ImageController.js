@@ -138,7 +138,7 @@ const searchUploads = async (req, res) => {
             tags: upload.tags,
             imgId: upload.imgId,
             author: upload.account,
-            createdAt: upload.createdAt,
+            uploadedDate: upload.uploadedDate,
         }));
 
         res.json({
