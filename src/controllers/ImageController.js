@@ -87,12 +87,21 @@ const viewUpload = async (req, res) => {
 
 
 const searchUploads = async (req, res) => {
-    const { searchQuery, type } = req.body;
+    const { searchQuery, type, page = 1, limit = 30 } = req.body;
 
     try {
         if (!searchQuery) {
             return res.status(400).json({ error: 'Invalid Query specified' });
         }
+
+        if (!Number.isInteger(+page) || +page <= 0) {
+            return res.status(400).json({ error: 'Invalid page number specified' });
+        }
+
+        if (!Number.isInteger(+limit) || +limit <= 0) {
+            return res.status(400).json({ error: 'Invalid limit specified' });
+        }
+
         const query = {
             $or: [
                 { title: { $regex: searchQuery, $options: 'i' } },
@@ -100,14 +109,23 @@ const searchUploads = async (req, res) => {
             ]
         };
 
-        let results;
+        let model;
         if (type === 'wallpaper') {
-            results = await Wallpaper.find(query);
+            model = Wallpaper;
         } else if (type === 'pfp') {
-            results = await Pfp.find(query);
+            model = Pfp;
         } else {
             return res.status(400).json({ error: 'Invalid type specified' });
         }
+
+        const totalCount = await model.countDocuments(query);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const results = await model.find(query)
+            .sort({ uploadedDate: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+
         const formattedResults = results.map(upload => ({
             id: upload._id,
             title: upload.title,
@@ -119,11 +137,18 @@ const searchUploads = async (req, res) => {
             createdAt: upload.createdAt,
         }));
 
-        res.json({ uploads: formattedResults });
+        res.json({
+            uploads: formattedResults,
+            currentPage: +page,
+            totalPages: totalPages,
+            totalCount: totalCount
+        });
     } catch (error) {
+        console.error(`Error in searchUploads: ${error.message}`);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 const getUploadsFromUser = async (req, res) => {
