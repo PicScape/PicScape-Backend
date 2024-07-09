@@ -125,29 +125,41 @@ const searchUploads = async (req, res) => {
         const totalCount = await model.countDocuments(query);
         const totalPages = Math.ceil(totalCount / limit);
 
-        const results = await model.find(query)
+        const uploads = await model.find(query)
             .sort({ uploadedDate: -1 })
             .skip((page - 1) * limit)
             .limit(limit);
 
-        const formattedResults = results.map(upload => ({
-            id: upload._id,
-            title: upload.title,
-            description: upload.description,
-            type: upload.type,
-            tags: upload.tags,
-            imgId: upload.imgId,
-            authorId: upload.account,
-            username: username,
-            uploadedDate: upload.uploadedDate,
-        }));
+            const formattedResults = await Promise.all(uploads.map(async (upload) => {
+                let username = '';
+    
+                try {
+                    const user = await Account.findById(upload.account);
+                    if (user) {
+                        username = user.username;
+                    } 
+                } catch (error) {
+                    console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
+                }
+    
+                return {
+                    id: upload._id,
+                    title: upload.title,
+                    description: upload.description,
+                    type: upload.type,
+                    tags: upload.tags,
+                    imgId: upload.imgId,
+                    authorId: upload.account,
+                    username: username,
+                    uploadedDate: upload.uploadedDate,
+                };
+            }));
 
-        res.json({
-            uploads: formattedResults,
-            currentPage: +page,
-            totalPages: totalPages,
-            totalCount: totalCount
-        });
+            res.json({ 
+                uploads: formattedResults,
+                currentPage: +page,
+                totalPages: totalPages
+            });
     } catch (error) {
         console.error(`Error in searchUploads: ${error.message}`);
         res.status(500).json({ error: 'Internal Server Error' });
