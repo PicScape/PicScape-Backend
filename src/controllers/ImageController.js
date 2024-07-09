@@ -87,7 +87,11 @@ const viewUpload = async (req, res) => {
 
 
 const searchUploads = async (req, res) => {
-    const { searchQuery, type, page = 1, limit = 30 } = req.body;
+    const { searchQuery } = req.query;
+    const { type } = req.query;
+    const { page = 1 } = req.query;
+    const { limit = 30} = req.query;
+
 
     try {
         if (!searchQuery) {
