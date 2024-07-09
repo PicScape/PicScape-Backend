@@ -9,6 +9,6 @@ router.get('/search', ImageController.searchUploads);
 router.get('/newest', ImageController.getNewestUploads);
 router.delete('/delete/:imgId', ImageController.deleteUpload);
 router.get('/myscape', ImageController.getUploadsFromUser);
-
+router.get('/stats', ImageController.getServerStats); 
 
 module.exports = router;

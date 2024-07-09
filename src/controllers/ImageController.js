@@ -338,8 +338,32 @@ const deleteUpload = async (req, res) => {
             console.error('Error deleting upload:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
+
+        
     });
+
+
+    
+};
+const getServerStats = async (req, res) => {
+    try {
+        const memberCount = await Account.countDocuments();
+        const pfpCount = await Pfp.countDocuments();
+        const wallpaperCount = await Wallpaper.countDocuments();
+        const totalUploadsCount = pfpCount + wallpaperCount;
+
+        res.json({
+            members: memberCount,
+            uploads: {
+                total: totalUploadsCount,
+                pfps: pfpCount,
+                wallpapers: wallpaperCount
+            }
+        });
+    } catch (error) {
+        console.error(`Error in getServerStats: ${error.message}`);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
-
-    module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload, getUploadsFromUser };
+    module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload, getUploadsFromUser, getServerStats };
