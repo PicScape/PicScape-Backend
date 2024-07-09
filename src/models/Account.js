@@ -98,7 +98,7 @@ accountSchema.pre('save', function (next) {
   const account = this;
 
   if (!account.pfp) {
-    const base64Image = imageToBase64('./src/assets/logo.png');
+    const base64Image = imageToBase64('./src/assets/default_pfp.png');
     account.pfp = Buffer.from(base64Image, 'base64');
   }
   next();
