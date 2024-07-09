@@ -87,11 +87,7 @@ const viewUpload = async (req, res) => {
 
 
 const searchUploads = async (req, res) => {
-    const { searchQuery } = req.query;
-    const { type } = req.query;
-    const { page = 1 } = req.query;
-    const { limit = 30} = req.query;
-
+    const { searchQuery, type, page = 1, limit = 30 } = req.query;
 
     try {
         if (!searchQuery) {
@@ -130,36 +126,36 @@ const searchUploads = async (req, res) => {
             .skip((page - 1) * limit)
             .limit(limit);
 
-            const formattedResults = await Promise.all(uploads.map(async (upload) => {
-                let username = '';
-    
-                try {
-                    const user = await Account.findById(upload.account);
-                    if (user) {
-                        username = user.username;
-                    } 
-                } catch (error) {
-                    console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
-                }
-    
-                return {
-                    id: upload._id,
-                    title: upload.title,
-                    description: upload.description,
-                    type: upload.type,
-                    tags: upload.tags,
-                    imgId: upload.imgId,
-                    authorId: upload.account,
-                    username: username,
-                    uploadedDate: upload.uploadedDate,
-                };
-            }));
+        const formattedResults = await Promise.all(uploads.map(async (upload) => {
+            let username = '';
 
-            res.json({ 
-                uploads: formattedResults,
-                currentPage: +page,
-                totalPages: totalPages
-            });
+            try {
+                const user = await Account.findById(upload.account);
+                if (user) {
+                    username = user.username;
+                }
+            } catch (error) {
+                console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
+            }
+
+            return {
+                id: upload._id,
+                title: upload.title,
+                description: upload.description,
+                type: upload.type,
+                tags: upload.tags,
+                imgId: upload.imgId,
+                authorId: upload.account,
+                username: username,
+                uploadedDate: upload.uploadedDate,
+            };
+        }));
+
+        res.json({
+            uploads: formattedResults,
+            currentPage: +page,
+            totalPages: totalPages
+        });
     } catch (error) {
         console.error(`Error in searchUploads: ${error.message}`);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -207,7 +203,7 @@ const getUploadsFromUser = async (req, res) => {
                 const user = await Account.findById(upload.account);
                 if (user) {
                     username = user.username;
-                } 
+                }
             } catch (error) {
                 console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
             }
@@ -225,7 +221,7 @@ const getUploadsFromUser = async (req, res) => {
             };
         }));
 
-        res.json({ 
+        res.json({
             uploads: formattedResults,
             currentPage: +page,
             totalPages: totalPages
@@ -262,7 +258,7 @@ const getNewestUploads = async (req, res) => {
                 const user = await Account.findById(upload.account);
                 if (user) {
                     username = user.username;
-                } 
+                }
             } catch (error) {
                 console.warn(`Error fetching user for account: ${upload.account}, setting username to empty.`);
             }
@@ -280,7 +276,7 @@ const getNewestUploads = async (req, res) => {
             };
         }));
 
-        res.json({ 
+        res.json({
             uploads: formattedResults,
             currentPage: +page,
             totalPages: Math.ceil(formattedResults.length / limit)
@@ -310,7 +306,7 @@ const deleteUpload = async (req, res) => {
 
         try {
             let upload = await findUploadById(imgId);
-            const account = await Account.findOne({'_id': decoded.id})
+            const account = await Account.findOne({ '_id': decoded.id })
             console.log(account)
             if (!upload) {
                 return res.status(404).json({ error: 'Upload not found' });
@@ -339,11 +335,11 @@ const deleteUpload = async (req, res) => {
             res.status(500).json({ error: 'Internal Server Error' });
         }
 
-        
+
     });
 
 
-    
+
 };
 const getServerStats = async (req, res) => {
     try {
@@ -366,4 +362,4 @@ const getServerStats = async (req, res) => {
     }
 };
 
-    module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload, getUploadsFromUser, getServerStats };
+module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload, getUploadsFromUser, getServerStats };
