@@ -60,7 +60,7 @@ const accountSchema = new mongoose.Schema({
     type: Date 
   },
   pfp: {
-    type: String,
+    type: Buffer,
   }
 });
 
@@ -98,11 +98,11 @@ accountSchema.pre('save', function (next) {
   const account = this;
 
   if (!account.pfp) {
-    account.pfp = imageToBase64('./src/assets/logo.png');
+    const base64Image = imageToBase64('./src/assets/logo.png');
+    account.pfp = Buffer.from(base64Image, 'base64');
   }
   next();
 });
-
 accountSchema.methods.comparePassword = function (candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) return callback(err);
