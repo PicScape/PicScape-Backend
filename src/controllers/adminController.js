@@ -47,6 +47,20 @@ const getAccounts = async (req, res) => {
     }
 };
 
+const deleteAccount = async (req, res) => {
+    const { accountId } = req.query;
+    try {
+        const deletedAccount = await Account.findByIdAndDelete(accountId);
 
+        if (!deletedAccount) {
+            return res.status(404).json({ error: 'Account not found' });
+        }
 
-module.exports = { getAccounts };
+        res.json({ message: 'Account deleted successfully', deletedAccount });
+    } catch (error) {
+        console.error(`Error in deleteAccount: ${error.message}`);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+module.exports = { getAccounts, deleteAccount };
