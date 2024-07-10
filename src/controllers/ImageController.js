@@ -362,4 +362,4 @@ const getServerStats = async (req, res) => {
     }
 };
 
-module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload, getUploadsFromUser, getServerStats };
+module.exports = { getUploadData, viewUpload, searchUploads, getNewestUploads, deleteUpload, getUploadsFromUser, getServerStats, findUploadById };
