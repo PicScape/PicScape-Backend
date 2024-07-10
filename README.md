@@ -38,7 +38,7 @@ npm run docker:prod
 
 ### For the complete functionality of this project, the [frontend](https://github.com/AIO-Develope/PicScape-Frontend/) is essential.
 
-## API Routes
+## API Routes (extremely outdated and I will move it to a wiki soon)
 
 ### authRoutes.js
 ```
