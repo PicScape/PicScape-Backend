@@ -24,7 +24,6 @@ const getAccounts = async (req, res) => {
                 $or: [
                     { username: { $regex: searchValue, $options: 'i' } },
                     { email: { $regex: searchValue, $options: 'i' } },
-                    { id: { $regex: searchValue, $options: 'i' } } 
                 ]
             };
         }
