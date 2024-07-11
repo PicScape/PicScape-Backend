@@ -3,11 +3,10 @@ const Account = require('../models/Account');
 
 
 
-
 const getAccounts = async (req, res) => {
-    const { sortField = 'username', sortOrder = 'asc', page = 1 } = req.query;
+    const { sortField = 'username', sortOrder = 'asc', page = 1, searchValue } = req.query;
     const limit = 40;
-    const sortOrderValue = sortOrder === 'dec' ? -1: 1;
+    const sortOrderValue = sortOrder === 'dec' ? -1 : 1;
 
     try {
         if (!Number.isInteger(+page) || +page <= 0) {
@@ -18,9 +17,21 @@ const getAccounts = async (req, res) => {
             return res.status(400).json({ error: 'Invalid sortField specified' });
         }
 
-        const totalAccounts = await Account.countDocuments();
+        let filter = {};
 
-        const results = await Account.find()
+        if (searchValue) {
+            filter = {
+                $or: [
+                    { username: { $regex: searchValue, $options: 'i' } },
+                    { email: { $regex: searchValue, $options: 'i' } },
+                    { id: { $regex: searchValue, $options: 'i' } } 
+                ]
+            };
+        }
+
+        const totalAccounts = await Account.countDocuments(filter);
+
+        const results = await Account.find(filter)
             .sort({ [sortField]: sortOrderValue })
             .skip((+page - 1) * limit)
             .limit(limit);
