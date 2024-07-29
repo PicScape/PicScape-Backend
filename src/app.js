@@ -34,6 +34,7 @@ app.use('/fetch', routes.fetchRoutes);
 app.use('/upload', routes.uploadRoutes);
 app.use('/image', routes.imageRoutes);
 app.use('/admin', isAdmin, routes.adminRoutes);
+app.use('/report', routes.reportRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

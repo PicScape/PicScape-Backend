@@ -3,6 +3,7 @@ const fetchRoutes = require('./routes/fetchRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 
 module.exports = {
@@ -11,4 +12,5 @@ module.exports = {
   uploadRoutes,
   imageRoutes,
   adminRoutes,
+  reportRoutes,
 };
