@@ -45,7 +45,7 @@ const wallpaperSchema = new mongoose.Schema({
   }
 });
 
-wallpaperSchema.pre('save', async function(next) {
+wallpaperSchema.pre('save', async function (next) {
   const doc = this;
 
   if (doc.isNew) {

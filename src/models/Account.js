@@ -53,11 +53,11 @@ const accountSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-  verificationCode: { 
-    type: String 
+  verificationCode: {
+    type: String
   },
-  verificationCodeExpires: { 
-    type: Date 
+  verificationCodeExpires: {
+    type: Date
   },
   pfp: {
     type: Buffer,
