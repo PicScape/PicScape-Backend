@@ -5,7 +5,6 @@ const imageRoutes = require('./routes/imageRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 
-
 module.exports = {
   authRoutes,
   fetchRoutes,
